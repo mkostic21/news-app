@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">News App</string>
+    <string name="news_search_hint">Search...</string>
+    <string name="fab_favourite_description">Add to favourites</string>
+    <string name="menu_breaking_news">Breaking News</string>
+    <string name="menu_saved_news">Saved News</string>
+    <string name="menu_search_news">Search News</string>
+    <string name="article_preview_image_description">Article preview image</string>
 </resources>

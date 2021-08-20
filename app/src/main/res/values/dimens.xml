@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fab_favourite_margin">32dp</dimen>
+    <dimen name="item_article_preview_padding">8dp</dimen>
+    <dimen name="article_item_preview_source_margin_top">16dp</dimen>
+    <dimen name="item_article_preview_margin">8dp</dimen>
+</resources>
