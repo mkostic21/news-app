@@ -17,10 +17,10 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSavedNewsBinding.bind(view)
 
-        setupRecyclerVieiw()
+        setupRecyclerView()
     }
 
-    private fun setupRecyclerVieiw(){
+    private fun setupRecyclerView() {
         newsAdapter = NewsAdapter()
         binding.rvSavedNews.apply {
             adapter = newsAdapter
