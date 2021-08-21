@@ -16,7 +16,15 @@ class NewsActivity : AppCompatActivity(){
         binding = ActivityNewsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        /**
+         * navController needs the id of the host fragment to successfully initialize.
+         * supportFragmentManager fetches the id of the navHostFragment which is then used to build the navController
+         */
         val navController = (supportFragmentManager.findFragmentById(R.id.newsNavHostFragment) as NavHostFragment).navController
+
         binding.bottomNavigationView.setupWithNavController(navController)
     }
+
+
 }

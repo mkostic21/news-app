@@ -17,8 +17,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSavedNewsBinding.bind(view)
 
-        //setupRecyclerVieiw()
-
+        setupRecyclerVieiw()
     }
 
     private fun setupRecyclerVieiw(){

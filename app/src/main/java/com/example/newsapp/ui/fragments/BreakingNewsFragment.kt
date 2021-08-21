@@ -13,5 +13,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentBreakingNewsBinding.bind(view)
+
+        //TODO: setup recycler
+        //TODO: check if more options menu works when recycler is setup
     }
 }
