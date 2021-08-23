@@ -8,7 +8,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitInstance {
     companion object {
-
+        /**
+         * retrofit ***Singleton***
+         */
         private val retrofit by lazy {
             val logging = HttpLoggingInterceptor()
             logging.setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -23,6 +25,9 @@ class RetrofitInstance {
                 .build()
         }
 
+        /**
+         * ***lazy*** ensures single access point to *API*
+         */
         val api by lazy {
             retrofit.create(NewsAPI::class.java)
         }

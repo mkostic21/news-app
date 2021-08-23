@@ -1,6 +1,7 @@
 package com.example.newsapp.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -9,16 +10,44 @@ import com.bumptech.glide.Glide
 import com.example.newsapp.databinding.ItemArticlePreviewBinding
 import com.example.newsapp.models.Article
 
-class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
+class NewsAdapter(
+    private val listener: OnItemClickListener
+) : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
     inner class ArticleViewHolder(val binding: ItemArticlePreviewBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root),
+        View.OnClickListener {
+
+        init {
+            binding.root.setOnClickListener(this)
+        }
+
+        /**
+         * checking if *clicked* item is **deleted** before the delete animation finishes, with *adapterPosition* value.
+         *
+         * adapterPosition = **-1** if clicked item is **deleted**
+         */
+        override fun onClick(v: View?) {
+            val position = adapterPosition
+            val article = differ.currentList[position]
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(article)
+            }
+        }
+    }
+    /**
+     * Defined custom *OnClickInterface* to pass clicks to other **Views**
+     */
+    interface OnItemClickListener {
+        fun onItemClick(article: Article)
+    }
 
     /**
-     * Keeps the item<Article> list updated.
+     * Keeps the **Article** list updated.
      *
-     * Articles are received from API, but ID property is used for local DB.
-     * So we compare URLs, which is unique for every Article
+     * *Articles* are received from *API*, but *ID* property is used for *local DB*.
+     *
+     * So we compare *URLs*, which is unique for every *Article*
      */
     private val differCallback = object : DiffUtil.ItemCallback<Article>() {
         override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
@@ -31,6 +60,8 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
     }
     val differ = AsyncListDiffer(this, differCallback)
 
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
         return ArticleViewHolder(
             ItemArticlePreviewBinding.inflate(
@@ -40,10 +71,9 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
             )
         )
     }
+
     /**
-     * Load data from article to corresponding fields in layout.
-     *
-     * Also, setup the custom onClickListener for each item in list
+     * Load data from **Article** to corresponding fields in the layout.
      */
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = differ.currentList[position]
@@ -54,24 +84,11 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
             tvTitle.text = article.title
             tvDescription.text = article.description
             tvPublishedAt.text = article.publishedAt
-
-            setOnItemClickListener {
-                onItemClickListener?.let { it(article) }
-            }
         }
     }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
-    }
-
-    /**
-     * defined custom click listener which returns clicked Article
-     */
-    private var onItemClickListener: ((Article) -> Unit)? = null
-
-    private fun setOnItemClickListener(listener: (Article) -> Unit) {
-        onItemClickListener = listener
     }
 
 }

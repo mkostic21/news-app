@@ -21,13 +21,13 @@ class NewsActivity : AppCompatActivity(){
         setContentView(binding.root)
 
         val newsRepository = NewsRepository(ArticleDatabase(this))
-        val viewModelProviderFactory = NewsViewModelProviderFactory(newsRepository)
+        val viewModelProviderFactory = NewsViewModelProviderFactory(application, newsRepository)
         viewModel = ViewModelProvider(this, viewModelProviderFactory).get(NewsViewModel::class.java)
 
 
         /**
-         * navController needs the id of the host fragment to successfully initialize.
-         * supportFragmentManager fetches the id of the navHostFragment which is then used to build the navController
+         * *navController* needs the **id** of the *host fragment* to successfully initialize.
+         * *supportFragmentManager* fetches the **id** of the *navHostFragment* which is then used to build the *navController*
          */
         val navController = (supportFragmentManager.findFragmentById(R.id.newsNavHostFragment) as NavHostFragment).navController
         binding.bottomNavigationView.setupWithNavController(navController)

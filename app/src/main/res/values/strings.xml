@@ -10,4 +10,5 @@
     <string name="more_options_menu_add_to_favourites">Add to favourites</string>
     <string name="more_options_menu_share">Share</string>
     <string name="more_options_menu_remove_from_feed">Remove from feed</string>
+    <string name="item_error_message_default">Failed to connect</string>
 </resources>

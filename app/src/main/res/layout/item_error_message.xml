@@ -18,7 +18,7 @@
             android:layout_margin="@dimen/item_error_message_margin"
             android:layout_weight="2"
             android:gravity="center_horizontal"
-            tools:text="Failed to connect"
+            android:text="@string/item_error_message_default"
             android:textAlignment="center" />
 
         <Button
