@@ -6,9 +6,7 @@ import android.widget.AbsListView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.R
@@ -17,7 +15,6 @@ import com.example.newsapp.databinding.FragmentSearchNewsBinding
 import com.example.newsapp.models.Article
 import com.example.newsapp.ui.NewsActivity
 import com.example.newsapp.ui.NewsViewModel
-import com.example.newsapp.util.Constants
 import com.example.newsapp.util.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.newsapp.util.Constants.Companion.SEARCH_NEWS_TIME_DELAY
 import com.example.newsapp.util.Resource
@@ -32,6 +29,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
     private lateinit var binding: FragmentSearchNewsBinding
     private lateinit var newsAdapter: NewsAdapter
     lateinit var viewModel: NewsViewModel
+    var job: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,9 +37,27 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
         viewModel = (activity as NewsActivity).viewModel
 
         setupRecyclerView()
+        setRetryButtonClickListener()
+        handleResponseData()
+        searchNews()
 
-        var job: Job? = null
-        //TODO: reformat to separate fun
+    }
+
+    /**
+     * Status helper booleans for *pagination*
+     */
+    var isError = false
+    var isLoading = false
+    var isLastPage = false
+    var isScrolling = false
+
+
+    /**
+     * Calls ***ViewModel.SearchNews()*** with a string specified in ***etSearch***
+     *
+     * After ***500ms*** if the search bar is **not empty**, it requests the network call with corresponding ***String***
+     */
+    private fun searchNews(){
         binding.etSearch.addTextChangedListener { editable ->
             job?.cancel()
             job = MainScope().launch {
@@ -53,9 +69,16 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
                 }
             }
         }
+    }
 
-        //TODO: reformat to separate fun
-        viewModel.searchNews.observe(viewLifecycleOwner, Observer { response ->
+
+    /**
+     * Handles *Pagination*, *Response* ***data*** and ***state***
+     *
+     * *states*: ***Success, Error, Loading***
+     */
+    private fun handleResponseData() {
+        viewModel.searchNews.observe(viewLifecycleOwner, { response ->
             when (response) {
                 is Resource.Success -> {
                     hideProgressBar()
@@ -73,7 +96,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
                 is Resource.Error -> {
                     hideProgressBar()
                     response.message?.let { message ->
-                        Toast.makeText(activity, "An error occured: $message", Toast.LENGTH_LONG)
+                        Toast.makeText(activity, "An error occurred: $message", Toast.LENGTH_LONG)
                             .show()
                         showErrorMessage(message)
                     }
@@ -83,8 +106,15 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
                 }
             }
         })
+    }
 
-        //TODO: reformat to separate function to define Retry func
+
+    /**
+     * Sets ***OnClickListener*** to *Retry* button
+     *
+     * *OnClick* initiates a *network request* via *getBreakingNews()* from ***ViewModel***
+     */
+    private fun setRetryButtonClickListener(){
         binding.itemErrorMessage.btnRetry.setOnClickListener {
             if (binding.etSearch.text.toString().isNotEmpty()) {
                 viewModel.searchNews(binding.etSearch.text.toString())
@@ -92,9 +122,15 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
                 hideErrorMessage()
             }
         }
-
     }
 
+
+    /**
+     * Sets up a *RecyclerView adapter* and passes the
+     * custom ***OnClickListener*** in the constructor.
+     *
+     *  Also adds custom ***OnScrollListener*** defined *below*
+     */
     private fun setupRecyclerView() {
         newsAdapter = NewsAdapter(this)
         binding.rvSearchNews.apply {
@@ -104,6 +140,9 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
         }
     }
 
+    /**
+     * Loading animation and Error screen toggle functions
+     */
     private fun hideProgressBar() {
         binding.progressBar.visibility = View.INVISIBLE
     }
@@ -125,24 +164,18 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
 
 
     /**
-     * Status helper booleans for *pagination*
+     * With the help of ***layoutManager*** it is possible to calculate
+     * if the last item in a *response page* has been reached.
+     *
+     * ***isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount***
      */
-    var isError = false
-    var isLoading = false
-    var isLastPage = false
-    var isScrolling = false
-
-
-    val scrollListener = object : RecyclerView.OnScrollListener() {
+    private val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
-            /** Pagination and View helper vars for better readability
-             *
-             * With the help of ***layoutManager*** it is possible to calculate
-             * if the last item in a single page has been reached.
-             *
-             * ***isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount***
+            //TODO: data class + more readable funcs for ifChecks
+            /**
+             * *Pagination* and *View* helper vars for better readability
              */
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
@@ -152,10 +185,10 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
             val isNoErrors = !isError
             val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
             val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
-            val isNotAtBegginning = firstVisibleItemPosition >= 0
-            val isTotalMoreThanVisible = totalItemCount >= Constants.QUERY_PAGE_SIZE
+            val isNotAtBeginning = firstVisibleItemPosition >= 0
+            val isTotalMoreThanVisible = totalItemCount >= QUERY_PAGE_SIZE
             val shouldPaginate =
-                isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBegginning && isTotalMoreThanVisible && isScrolling
+                isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
 
             if (shouldPaginate) {
                 viewModel.getBreakingNews("us")
@@ -172,13 +205,26 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
                 isScrolling = true
             }
         }
+
     }
 
+
+    /**
+     * Puts passed ***Article*** into a *Bundle*.
+     *
+     * Then navigates to *ArticleFragment*
+     */
     override fun onItemClick(article: Article) {
         val bundle = Bundle().apply {
             putSerializable("article", article)
         }
-        //TODO: reformat to separate fun
+        navigateToArticleFragment(bundle)
+    }
+
+    /**
+     * Passes ***Bundle*** and navigates to *ArticleFragment* via *NavController*
+     */
+    private fun navigateToArticleFragment(bundle: Bundle) {
         binding.root.findNavController().navigate(
             R.id.action_searchNewsFragment_to_articleFragment,
             bundle

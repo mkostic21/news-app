@@ -84,7 +84,6 @@ class NewsViewModel(
     fun saveArticle(article: Article) = viewModelScope.launch {
         newsRepository.upsert(article)
     }
-
     fun getSavedNews() = newsRepository.getSavedNews()
     fun deleteArticle(article: Article) = viewModelScope.launch {
         newsRepository.deleteArticle(article)
@@ -128,7 +127,7 @@ class NewsViewModel(
     /**
      * Checks if a **device** is connected to the Internet.
      *
-     * *Possible connection types*: ***Wi-Fi, Celular*** *or* ***Ethernet***
+     * *Possible connection types*: ***Wi-Fi, Cellular*** *or* ***Ethernet***
      */
     private fun hasInternetConnection(): Boolean {
         val connectivityManager = getApplication<NewsApplication>().getSystemService(

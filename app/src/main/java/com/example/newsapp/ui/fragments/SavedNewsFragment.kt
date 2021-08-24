@@ -28,17 +28,12 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
         viewModel = (activity as NewsActivity).viewModel
 
         setupRecyclerView()
-
-        //TODO: reformat to separate fun
-        viewModel.getSavedNews().observe(viewLifecycleOwner, Observer { articles ->
-            newsAdapter.differ.submitList(articles)
-        })
+        loadSavedArticlesFromDB()
 
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
-
             /**
              * This functionality is ***not being used*** so it just ***returns true*** as default behaviour
              */
@@ -50,13 +45,15 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
                 return true
             }
 
+            /**
+             * On ***left*** or ***right*** *swipe*, deletes selected *Article* from *Database*
+             */
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val article = newsAdapter.differ.currentList[position]
                 viewModel.deleteArticle(article)
-                //TODO: Reforat to separate fun
                 Snackbar.make(view, "Successfully deleted article", Snackbar.LENGTH_LONG).apply {
-                    setAction("Undo"){
+                    setAction("Undo") {
                         viewModel.saveArticle(article)
                     }
                     show()
@@ -71,6 +68,10 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
 
     }
 
+    /**
+     * Sets up a *RecyclerView adapter* and passes the
+     * custom ***OnClickListener*** in the constructor.
+     */
     private fun setupRecyclerView() {
         newsAdapter = NewsAdapter(this)
         binding.rvSavedNews.apply {
@@ -79,14 +80,36 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
         }
     }
 
+    /**
+     * Get saved ***Articles*** from ***Database*** and load them into ***RecyclerView Adapter***
+     */
+    private fun loadSavedArticlesFromDB(){
+        viewModel.getSavedNews().observe(viewLifecycleOwner, Observer { articles ->
+            newsAdapter.differ.submitList(articles)
+        })
+    }
 
-
+    /**
+     * Puts passed ***Article*** into a *Bundle*.
+     *
+     * Then navigates to *ArticleFragment*
+     */
     override fun onItemClick(article: Article) {
         val bundle = Bundle().apply {
             putSerializable("article", article)
         }
+        navigateToArticleFragment(bundle)
+    }
+
+    /**
+     * Passes ***Bundle*** and navigates to *ArticleFragment* via *NavController*
+     */
+    private fun navigateToArticleFragment(bundle: Bundle) {
         binding.root.findNavController().navigate(
             R.id.action_savedNewsFragment_to_articleFragment,
-            bundle)
+            bundle
+        )
     }
+
+
 }

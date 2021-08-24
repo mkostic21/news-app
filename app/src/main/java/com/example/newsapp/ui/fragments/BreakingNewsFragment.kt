@@ -31,8 +31,26 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
         viewModel = (activity as NewsActivity).viewModel
 
         setupRecyclerView()
+        setRetryButtonClickListener()
+        handleResponseData()
+    }
 
-        //TODO: reformat to separate fun
+    /**
+     * *App State* booleans for *pagination*
+     */
+    var isError = false
+    var isLoading = false       //TODO: data class
+    var isLastPage = false
+    var isScrolling = false
+
+
+    /**
+     * Handles *Pagination*, *Response* ***data*** and ***state***
+     *
+     * *states*: ***Success, Error, Loading***
+     */
+    private fun handleResponseData() {
+        //TODO: Resource responses to separate funcs
         viewModel.breakingNews.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resource.Success -> {
@@ -41,7 +59,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
                     response.data?.let { newsResponse ->
                         newsAdapter.differ.submitList(newsResponse.articles.toList())
                         val totalPages =
-                            newsResponse.totalResults / QUERY_PAGE_SIZE + 2 //1 empty page at the end + 1 for INT rounding when dividing
+                            newsResponse.totalResults / QUERY_PAGE_SIZE + 2 //2 = 1 empty page at the end + 1 for INT rounding when dividing TODO: Separate func
                         isLastPage = viewModel.breakingNewsPage == totalPages
                         if (isLastPage) {
                             binding.rvBreakingNews.setPadding(0, 0, 0, 0)
@@ -51,7 +69,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
                 is Resource.Error -> {
                     hideProgressBar()
                     response.message?.let { message ->
-                        Toast.makeText(activity, "An error occured: $message", Toast.LENGTH_LONG)
+                        Toast.makeText(activity, "An error occurred: $message", Toast.LENGTH_LONG)
                             .show()
                         showErrorMessage(message)
                     }
@@ -61,15 +79,26 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
                 }
             }
         })
+    }
 
-        //TODO: reformat to separate function to define Retry func
+    /**
+     * Sets ***OnClickListener*** to *Retry* button
+     *
+     * *OnClick* initiates a *network request* via *getBreakingNews()* from ***ViewModel***
+     */
+    private fun setRetryButtonClickListener() {
         binding.itemErrorMessage.btnRetry.setOnClickListener {
             viewModel.getBreakingNews("us") //TODO: programmatic input for countryCode
         }
-
-
     }
 
+
+    /**
+     * Sets up a *RecyclerView adapter* and passes the
+     * custom ***OnClickListener*** in the constructor.
+     *
+     *  Also adds custom ***OnScrollListener*** defined *below*
+     */
     private fun setupRecyclerView() {
         newsAdapter = NewsAdapter(this)
         binding.rvBreakingNews.apply {
@@ -80,6 +109,9 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
     }
 
 
+    /**
+     * Loading animation and Error screen toggle functions
+     */
     private fun hideProgressBar() {
         binding.progressBar.visibility = View.INVISIBLE
         isLoading = false
@@ -103,24 +135,19 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
 
 
     /**
-     * Status helper booleans for *pagination*
+     * With the help of ***layoutManager*** it is possible to calculate
+     * if the last item in a *response page* has been reached.
+     *
+     * ***isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount***
      */
-    var isError = false
-    var isLoading = false
-    var isLastPage = false
-    var isScrolling = false
-
-
-    val scrollListener = object : RecyclerView.OnScrollListener() {
+    private val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
-            /** Pagination and View helper vars for better readability
-             *
-             * With the help of ***layoutManager*** it is possible to calculate
-             * if the last item in a single page has been reached.
-             *
-             * ***isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount***
+
+            //TODO: data class + more readable funcs for ifChecks
+            /**
+             * *Pagination* and *View* helper vars for better readability
              */
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
@@ -130,11 +157,14 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
             val isNoErrors = !isError
             val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
             val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
-            val isNotAtBegginning = firstVisibleItemPosition >= 0
+            val isNotAtBeginning = firstVisibleItemPosition >= 0
             val isTotalMoreThanVisible = totalItemCount >= QUERY_PAGE_SIZE
-            val shouldPaginate = isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBegginning && isTotalMoreThanVisible &&  isScrolling
 
-            if(shouldPaginate) {
+            //all defined conditions == true -> paginate
+            val shouldPaginate =
+                isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
+
+            if (shouldPaginate) {
                 viewModel.getBreakingNews("us")
                 isScrolling = false
             }
@@ -145,22 +175,34 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
          */
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
-            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                 isScrolling = true
             }
         }
     }
 
 
+    /**
+     * Puts passed ***Article*** into a *Bundle*.
+     *
+     * Then navigates to *ArticleFragment*
+     */
     override fun onItemClick(article: Article) {
         val bundle = Bundle().apply {
             putSerializable("article", article)
         }
 
-        //TODO: reformat to separate fun
+        navigateToArticleFragment(bundle)
+    }
+
+    /**
+     * Passes ***Bundle*** and navigates to *ArticleFragment* via *NavController*
+     */
+    private fun navigateToArticleFragment(bundle: Bundle) {
         binding.root.findNavController().navigate(
             R.id.action_breakingNewsFragment_to_articleFragment,
             bundle
         )
     }
+
 }
