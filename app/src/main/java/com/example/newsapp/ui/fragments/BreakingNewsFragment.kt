@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.AbsListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,9 +34,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
         handleResponseData()
     }
 
-    /**
-     * *App State* booleans for *pagination*
-     */
+
+    //Application State booleans for pagination
     var isError = false
     var isLoading = false       //TODO: data class
     var isLastPage = false
@@ -51,7 +49,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
      */
     private fun handleResponseData() {
         //TODO: Resource responses to separate funcs
-        viewModel.breakingNews.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.breakingNews.observe(viewLifecycleOwner, { response ->
             when (response) {
                 is Resource.Success -> {
                     hideProgressBar()
@@ -94,7 +92,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
 
 
     /**
-     * Sets up a *RecyclerView adapter* and passes the
+     * Sets up a [RecyclerView] *adapter* and passes the
      * custom ***OnClickListener*** in the constructor.
      *
      *  Also adds custom ***OnScrollListener*** defined *below*
@@ -109,9 +107,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
     }
 
 
-    /**
-     * Loading animation and Error screen toggle functions
-     */
+
+    // Loading animation and Error screen toggle functions
     private fun hideProgressBar() {
         binding.progressBar.visibility = View.INVISIBLE
         isLoading = false
@@ -146,9 +143,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
 
 
             //TODO: data class + more readable funcs for ifChecks
-            /**
-             * *Pagination* and *View* helper vars for better readability
-             */
+            //Pagination* and View helper vars for better readability
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val visibleItemCount = layoutManager.childCount
@@ -171,7 +166,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
         }
 
         /**
-         * Checks if the *View* is currently being scrolled
+         * Checks if the [View] is currently being scrolled
          */
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
@@ -183,9 +178,9 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
 
 
     /**
-     * Puts passed ***Article*** into a *Bundle*.
+     * Puts passed [article] into a [Bundle].
      *
-     * Then navigates to *ArticleFragment*
+     * Then navigates to [ArticleFragment]
      */
     override fun onItemClick(article: Article) {
         val bundle = Bundle().apply {
@@ -196,7 +191,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
     }
 
     /**
-     * Passes ***Bundle*** and navigates to *ArticleFragment* via *NavController*
+     * Passes [bundle] and navigates to [ArticleFragment] via *NavController*
      */
     private fun navigateToArticleFragment(bundle: Bundle) {
         binding.root.findNavController().navigate(

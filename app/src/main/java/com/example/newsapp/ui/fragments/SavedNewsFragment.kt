@@ -46,7 +46,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
             }
 
             /**
-             * On ***left*** or ***right*** *swipe*, deletes selected *Article* from *Database*
+             * On ***left*** or ***right*** *swipe*, deletes selected [Article] from *Database*
              */
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
@@ -69,7 +69,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
     }
 
     /**
-     * Sets up a *RecyclerView adapter* and passes the
+     * Sets up a [RecyclerView] *adapter* and passes the
      * custom ***OnClickListener*** in the constructor.
      */
     private fun setupRecyclerView() {
@@ -81,18 +81,18 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
     }
 
     /**
-     * Get saved ***Articles*** from ***Database*** and load them into ***RecyclerView Adapter***
+     * Get saved ***Articles*** from ***Database*** and load them into [RecyclerView] *Adapter*
      */
     private fun loadSavedArticlesFromDB(){
-        viewModel.getSavedNews().observe(viewLifecycleOwner, Observer { articles ->
+        viewModel.getSavedNews().observe(viewLifecycleOwner, { articles ->
             newsAdapter.differ.submitList(articles)
         })
     }
 
     /**
-     * Puts passed ***Article*** into a *Bundle*.
+     * Puts passed [article] into a [Bundle].
      *
-     * Then navigates to *ArticleFragment*
+     * Then navigates to [ArticleFragment]
      */
     override fun onItemClick(article: Article) {
         val bundle = Bundle().apply {
@@ -102,7 +102,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
     }
 
     /**
-     * Passes ***Bundle*** and navigates to *ArticleFragment* via *NavController*
+     * Passes [bundle] and navigates to [ArticleFragment] via *NavController*
      */
     private fun navigateToArticleFragment(bundle: Bundle) {
         binding.root.findNavController().navigate(

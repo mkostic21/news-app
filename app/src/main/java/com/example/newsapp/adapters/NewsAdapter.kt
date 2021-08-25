@@ -19,7 +19,7 @@ class NewsAdapter(
         View.OnClickListener {
 
         init {
-            binding.root.setOnClickListener(this)
+            binding.root.setOnClickListener(this) //sets a click listener to each item in RecyclerView
         }
 
         /**
@@ -35,6 +35,7 @@ class NewsAdapter(
             }
         }
     }
+
     /**
      * Defined custom *OnClickInterface* to pass clicks to other **Views**
      */
@@ -59,7 +60,6 @@ class NewsAdapter(
         }
     }
     val differ = AsyncListDiffer(this, differCallback)
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {

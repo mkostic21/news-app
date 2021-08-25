@@ -29,7 +29,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
     private lateinit var binding: FragmentSearchNewsBinding
     private lateinit var newsAdapter: NewsAdapter
     lateinit var viewModel: NewsViewModel
-    var job: Job? = null
+    private var job: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,9 +43,8 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
 
     }
 
-    /**
-     * Status helper booleans for *pagination*
-     */
+
+    // Status helper booleans for pagination
     var isError = false
     var isLoading = false
     var isLastPage = false
@@ -53,9 +52,9 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
 
 
     /**
-     * Calls ***ViewModel.SearchNews()*** with a string specified in ***etSearch***
+     * Calls ***ViewModel.SearchNews()*** with a [String] specified in **etSearch**
      *
-     * After ***500ms*** if the search bar is **not empty**, it requests the network call with corresponding ***String***
+     * After ***500ms*** if the **etSearch** search bar is **not empty**, it requests the network call with corresponding [String]
      */
     private fun searchNews(){
         binding.etSearch.addTextChangedListener { editable ->
@@ -126,7 +125,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
 
 
     /**
-     * Sets up a *RecyclerView adapter* and passes the
+     * Sets up a [RecyclerView] *adapter* and passes the
      * custom ***OnClickListener*** in the constructor.
      *
      *  Also adds custom ***OnScrollListener*** defined *below*
@@ -140,9 +139,8 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
         }
     }
 
-    /**
-     * Loading animation and Error screen toggle functions
-     */
+
+    //Loading animation and Error screen toggle functions
     private fun hideProgressBar() {
         binding.progressBar.visibility = View.INVISIBLE
     }
@@ -174,9 +172,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
             super.onScrolled(recyclerView, dx, dy)
 
             //TODO: data class + more readable funcs for ifChecks
-            /**
-             * *Pagination* and *View* helper vars for better readability
-             */
+            //Pagination* and *View* helper vars for better readability
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val visibleItemCount = layoutManager.childCount
@@ -197,7 +193,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
         }
 
         /**
-         * Checks if the *View* is currently being scrolled
+         * Checks if the [View] is currently being scrolled
          */
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
@@ -210,9 +206,9 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
 
 
     /**
-     * Puts passed ***Article*** into a *Bundle*.
+     * Puts passed [article] into a [Bundle].
      *
-     * Then navigates to *ArticleFragment*
+     * Then navigates to [ArticleFragment]
      */
     override fun onItemClick(article: Article) {
         val bundle = Bundle().apply {
@@ -222,7 +218,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
     }
 
     /**
-     * Passes ***Bundle*** and navigates to *ArticleFragment* via *NavController*
+     * Passes [bundle] and navigates to [ArticleFragment] via *NavController*
      */
     private fun navigateToArticleFragment(bundle: Bundle) {
         binding.root.findNavController().navigate(

@@ -18,30 +18,51 @@ import java.io.IOException
 
 class NewsViewModel(
     app: Application,
-    val newsRepository: NewsRepository
+    private val newsRepository: NewsRepository
 ) : AndroidViewModel(app) {
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
     var breakingNewsPage = 1
-    var breakingNewsResponse: NewsResponse? = null
+    private var breakingNewsResponse: NewsResponse? = null
 
     val searchNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
     var searchNewsPage = 1
-    var searchNewsResponse: NewsResponse? = null
-    var newSearchQuery: String? = null
-    var oldSearchQuery: String? = null
+    private var searchNewsResponse: NewsResponse? = null
+    private var newSearchQuery: String? = null
+    private var oldSearchQuery: String? = null
 
     init {
         getBreakingNews("us") //TODO: input countryCode from app
     }
 
+
+    //public methods for API calls
+    /**
+     * Calls [safeBreakingNewsCall]
+     */
     fun getBreakingNews(countryCode: String) = viewModelScope.launch {
         safeBreakingNewsCall(countryCode)   //emit loading state before making network request
     }
-
+    /**
+     * Calls [safeSearchNewsCall]
+     */
     fun searchNews(searchQuery: String) = viewModelScope.launch {
         safeSearchNewsCall(searchQuery)    //emit loading state before making network request
     }
 
+
+
+
+
+
+
+
+
+    //pagination and RecyclerView List<Article> updating for display
+    /**
+     * Handles *pagination* and updates *RecyclerView* list of **Articles**
+     *
+     * (appends new data to existing data in a list)
+     */
     private fun handleBreakingNewsResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
         if (response.isSuccessful) {
             response.body()?.let { resultResponse ->
@@ -59,6 +80,11 @@ class NewsViewModel(
         return Resource.Error(response.message())
     }
 
+    /**
+     * Handles *pagination* of displayed search results and updates *RecyclerView* list of **articles**
+     *
+     * (appends new data to existing data in a list)
+     */
     private fun handleSearchNewsResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
         if (response.isSuccessful) {
             response.body()?.let { resultResponse ->
@@ -78,20 +104,52 @@ class NewsViewModel(
         return Resource.Error(response.message())
     }
 
+
+
+
+
+
+
+
+
+
+
+
+    //database functions:
     /**
-     * *ViewModel* **Database** functions
+     * Saves an [article] to **database** via [newsRepository]
      */
     fun saveArticle(article: Article) = viewModelScope.launch {
         newsRepository.upsert(article)
     }
+
+    /**
+     * Returns all saved ***Articles*** in **database** via [newsRepository]
+     */
     fun getSavedNews() = newsRepository.getSavedNews()
+
+    /**
+     * deletes an [article] from **database** via [newsRepository]
+     */
     fun deleteArticle(article: Article) = viewModelScope.launch {
         newsRepository.deleteArticle(article)
     }
 
 
+
+
+
+
+
+
+
+    //internet availability and exception handling functions:
+    /**
+     * Calls [hasInternetConnection] and depending on internet availability
+     * requests a network call via [newsRepository]
+     */
     private suspend fun safeBreakingNewsCall(countryCode: String) {
-        breakingNews.postValue(Resource.Loading())
+        breakingNews.postValue(Resource.Loading()) //post loading state before making a network call
         try {
             if (hasInternetConnection()) {
                 val response = newsRepository.getBreakingNews(countryCode, breakingNewsPage)
@@ -107,6 +165,10 @@ class NewsViewModel(
         }
     }
 
+    /**
+     * Calls [hasInternetConnection] and depending on internet availability
+     * requests a network call via [newsRepository]
+     */
     private suspend fun safeSearchNewsCall(searchQuery: String) {
         searchNews.postValue(Resource.Loading())
         try {
@@ -125,7 +187,7 @@ class NewsViewModel(
     }
 
     /**
-     * Checks if a **device** is connected to the Internet.
+     * Checks if a **device** is connected to the **Internet**.
      *
      * *Possible connection types*: ***Wi-Fi, Cellular*** *or* ***Ethernet***
      */
