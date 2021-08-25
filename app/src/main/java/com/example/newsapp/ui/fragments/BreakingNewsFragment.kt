@@ -54,6 +54,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
                 is Resource.Success -> {
                     hideProgressBar()
                     hideErrorMessage()
+                    hideEmptyListMessage()
                     response.data?.let { newsResponse ->
                         newsAdapter.differ.submitList(newsResponse.articles.toList())
                         val totalPages =
@@ -71,9 +72,15 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
                             .show()
                         showErrorMessage(message)
                     }
+                    if (isArticleListEmpty()) {
+                        showEmptyListMessage()
+                    }
                 }
                 is Resource.Loading -> {
                     showProgressBar()
+                    if (isArticleListEmpty()) {
+                        showEmptyListMessage()
+                    }
                 }
             }
         })
@@ -87,6 +94,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
     private fun setRetryButtonClickListener() {
         binding.itemErrorMessage.btnRetry.setOnClickListener {
             viewModel.getBreakingNews("us") //TODO: programmatic input for countryCode
+            hideEmptyListMessage()
+            hideErrorMessage()
         }
     }
 
@@ -103,9 +112,10 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
             addOnScrollListener(this@BreakingNewsFragment.scrollListener)
+
+            showEmptyListMessage() //it's empty on init
         }
     }
-
 
 
     // Loading animation and Error screen toggle functions
@@ -128,6 +138,19 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
     private fun hideErrorMessage() {
         binding.itemErrorMessage.root.visibility = View.INVISIBLE
         isError = false
+    }
+
+    private fun showEmptyListMessage() {
+        binding.itemEmptyList.root.visibility = View.VISIBLE
+    }
+
+    private fun hideEmptyListMessage() {
+        binding.itemEmptyList.root.visibility = View.INVISIBLE
+    }
+
+    private fun isArticleListEmpty(): Boolean {
+        return newsAdapter.differ.currentList.isEmpty()
+        //TODO: combine showing/hiding empty list message in this func
     }
 
 

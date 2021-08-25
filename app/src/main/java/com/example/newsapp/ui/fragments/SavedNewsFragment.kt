@@ -58,6 +58,12 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
                     }
                     show()
                 }
+                //if database is empty -> show message
+                viewModel.getSavedNews().observe(viewLifecycleOwner, { articles ->
+                    if(articles.isEmpty()){
+                        showEmptyListMessage()
+                    }
+                })
             }
         }
 
@@ -80,12 +86,29 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
         }
     }
 
+    //Empty list message toggle methods
+    private fun showEmptyListMessage() {
+        binding.itemEmptyList.root.visibility = View.VISIBLE
+    }
+
+    private fun hideEmptyListMessage() {
+        binding.itemEmptyList.root.visibility = View.INVISIBLE
+    }
+
+
+
     /**
      * Get saved ***Articles*** from ***Database*** and load them into [RecyclerView] *Adapter*
      */
-    private fun loadSavedArticlesFromDB(){
+    private fun loadSavedArticlesFromDB() {
         viewModel.getSavedNews().observe(viewLifecycleOwner, { articles ->
             newsAdapter.differ.submitList(articles)
+
+            if (articles.isEmpty()) {
+                showEmptyListMessage()
+            } else {
+                hideEmptyListMessage()
+            }
         })
     }
 

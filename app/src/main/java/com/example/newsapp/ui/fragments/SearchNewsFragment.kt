@@ -56,7 +56,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
      *
      * After ***500ms*** if the **etSearch** search bar is **not empty**, it requests the network call with corresponding [String]
      */
-    private fun searchNews(){
+    private fun searchNews() {
         binding.etSearch.addTextChangedListener { editable ->
             job?.cancel()
             job = MainScope().launch {
@@ -82,6 +82,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
                 is Resource.Success -> {
                     hideProgressBar()
                     hideErrorMessage()
+                    hideEmptyListMessage()
                     response.data?.let { newsResponse ->
                         newsAdapter.differ.submitList(newsResponse.articles.toList())
                         val totalPages =
@@ -99,9 +100,15 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
                             .show()
                         showErrorMessage(message)
                     }
+                    if(isArticleListEmpty()){
+                        showEmptyListMessage()
+                    }
                 }
                 is Resource.Loading -> {
                     showProgressBar()
+                    if(isArticleListEmpty()){
+                        showEmptyListMessage()
+                    }
                 }
             }
         })
@@ -113,12 +120,13 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
      *
      * *OnClick* initiates a *network request* via *getBreakingNews()* from ***ViewModel***
      */
-    private fun setRetryButtonClickListener(){
+    private fun setRetryButtonClickListener() {
         binding.itemErrorMessage.btnRetry.setOnClickListener {
             if (binding.etSearch.text.toString().isNotEmpty()) {
                 viewModel.searchNews(binding.etSearch.text.toString())
             } else {
                 hideErrorMessage()
+                hideEmptyListMessage()
             }
         }
     }
@@ -136,6 +144,8 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
             addOnScrollListener(this@SearchNewsFragment.scrollListener)
+
+            showEmptyListMessage() //it's empty on init
         }
     }
 
@@ -158,6 +168,18 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
     private fun hideErrorMessage() {
         binding.itemErrorMessage.root.visibility = View.INVISIBLE
         isError = false
+    }
+
+    private fun showEmptyListMessage() {
+        binding.itemEmptyList.root.visibility = View.VISIBLE
+    }
+
+    private fun hideEmptyListMessage() {
+        binding.itemEmptyList.root.visibility = View.INVISIBLE
+    }
+
+    private fun isArticleListEmpty(): Boolean{
+        return newsAdapter.differ.currentList.isEmpty()
     }
 
 
