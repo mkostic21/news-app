@@ -1,6 +1,7 @@
 package com.example.newsapp.ui.fragments
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.AbsListView
 import android.widget.Toast
@@ -18,13 +19,14 @@ import com.example.newsapp.ui.NewsViewModel
 import com.example.newsapp.util.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.newsapp.util.Constants.Companion.SEARCH_NEWS_TIME_DELAY
 import com.example.newsapp.util.Resource
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
-    NewsAdapter.OnItemClickListener {
+    NewsAdapter.OnItemClickListener, NewsAdapter.OnMenuClickListener {
 
     private lateinit var binding: FragmentSearchNewsBinding
     private lateinit var newsAdapter: NewsAdapter
@@ -100,13 +102,13 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
                             .show()
                         showErrorMessage(message)
                     }
-                    if(isArticleListEmpty()){
+                    if (isArticleListEmpty()) {
                         showEmptyListMessage()
                     }
                 }
                 is Resource.Loading -> {
                     showProgressBar()
-                    if(isArticleListEmpty()){
+                    if (isArticleListEmpty()) {
                         showEmptyListMessage()
                     }
                 }
@@ -139,7 +141,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
      *  Also adds custom ***OnScrollListener*** defined *below*
      */
     private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter(this)
+        newsAdapter = NewsAdapter(this, this)
         binding.rvSearchNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
@@ -178,7 +180,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
         binding.itemEmptyList.root.visibility = View.INVISIBLE
     }
 
-    private fun isArticleListEmpty(): Boolean{
+    private fun isArticleListEmpty(): Boolean {
         return newsAdapter.differ.currentList.isEmpty()
     }
 
@@ -237,6 +239,25 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
             putSerializable("article", article)
         }
         navigateToArticleFragment(bundle)
+    }
+
+    /**
+     * defines each [MenuItem] functionality
+     */
+    override fun onMenuItemClick(item: MenuItem?, article: Article) {
+        when (item!!.itemId) {
+            R.id.menuAddToFav -> {
+                viewModel.saveArticle(article)
+                Snackbar.make(binding.root, "Article saved successfully", Snackbar.LENGTH_SHORT)
+                    .show()
+            }
+            R.id.menuShare -> {
+                Toast.makeText(binding.root.context, item.title, Toast.LENGTH_SHORT).show()
+            }
+            R.id.menuRemove -> {
+                Toast.makeText(binding.root.context, item.title, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     /**

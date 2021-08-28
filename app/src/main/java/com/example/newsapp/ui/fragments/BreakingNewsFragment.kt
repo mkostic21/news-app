@@ -1,6 +1,7 @@
 package com.example.newsapp.ui.fragments
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.AbsListView
 import android.widget.Toast
@@ -16,9 +17,10 @@ import com.example.newsapp.ui.NewsActivity
 import com.example.newsapp.ui.NewsViewModel
 import com.example.newsapp.util.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.newsapp.util.Resource
+import com.google.android.material.snackbar.Snackbar
 
 class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
-    NewsAdapter.OnItemClickListener {
+    NewsAdapter.OnItemClickListener, NewsAdapter.OnMenuClickListener {
 
     private lateinit var binding: FragmentBreakingNewsBinding
     private lateinit var newsAdapter: NewsAdapter
@@ -107,7 +109,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
      *  Also adds custom ***OnScrollListener*** defined *below*
      */
     private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter(this)
+        newsAdapter = NewsAdapter(this, this)
         binding.rvBreakingNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
@@ -211,6 +213,25 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
         }
 
         navigateToArticleFragment(bundle)
+    }
+
+    /**
+     * defines each [MenuItem] functionality
+     */
+    override fun onMenuItemClick(item: MenuItem?, article: Article) {
+        when (item!!.itemId) {
+            R.id.menuAddToFav -> {
+                viewModel.saveArticle(article)
+                Snackbar.make(binding.root, "Article saved successfully", Snackbar.LENGTH_SHORT)
+                    .show()
+            }
+            R.id.menuShare -> {
+                Toast.makeText(binding.root.context, item.title, Toast.LENGTH_SHORT).show()
+            }
+            R.id.menuRemove -> {
+                Toast.makeText(binding.root.context, item.title, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     /**

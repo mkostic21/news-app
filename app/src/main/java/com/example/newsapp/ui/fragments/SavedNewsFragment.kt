@@ -1,9 +1,10 @@
 package com.example.newsapp.ui.fragments
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +17,8 @@ import com.example.newsapp.ui.NewsActivity
 import com.example.newsapp.ui.NewsViewModel
 import com.google.android.material.snackbar.Snackbar
 
-class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.OnItemClickListener {
+class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.OnItemClickListener,
+    NewsAdapter.OnMenuClickListener {
 
     private lateinit var binding: FragmentSavedNewsBinding
     private lateinit var newsAdapter: NewsAdapter
@@ -60,7 +62,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
                 }
                 //if database is empty -> show message
                 viewModel.getSavedNews().observe(viewLifecycleOwner, { articles ->
-                    if(articles.isEmpty()){
+                    if (articles.isEmpty()) {
                         showEmptyListMessage()
                     }
                 })
@@ -79,7 +81,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
      * custom ***OnClickListener*** in the constructor.
      */
     private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter(this)
+        newsAdapter = NewsAdapter(this, this)
         binding.rvSavedNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
@@ -94,7 +96,6 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
     private fun hideEmptyListMessage() {
         binding.itemEmptyList.root.visibility = View.INVISIBLE
     }
-
 
 
     /**
@@ -122,6 +123,24 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
             putSerializable("article", article)
         }
         navigateToArticleFragment(bundle)
+    }
+
+    /**
+     * defines each [MenuItem] functionality
+     */
+    override fun onMenuItemClick(item: MenuItem?, article: Article) {
+        when (item!!.itemId) {
+            R.id.menuAddToFav -> {
+                Snackbar.make(binding.root, "Item already saved", Snackbar.LENGTH_SHORT)
+                    .show()
+            }
+            R.id.menuShare -> {
+                Toast.makeText(binding.root.context, item.title, Toast.LENGTH_SHORT).show()
+            }
+            R.id.menuRemove -> {
+                Toast.makeText(binding.root.context, item.title, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     /**

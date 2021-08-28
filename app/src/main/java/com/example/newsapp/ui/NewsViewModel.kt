@@ -42,19 +42,13 @@ class NewsViewModel(
     fun getBreakingNews(countryCode: String) = viewModelScope.launch {
         safeBreakingNewsCall(countryCode)   //emit loading state before making network request
     }
+
     /**
      * Calls [safeSearchNewsCall]
      */
     fun searchNews(searchQuery: String) = viewModelScope.launch {
         safeSearchNewsCall(searchQuery)    //emit loading state before making network request
     }
-
-
-
-
-
-
-
 
 
     //pagination and RecyclerView List<Article> updating for display
@@ -105,16 +99,6 @@ class NewsViewModel(
     }
 
 
-
-
-
-
-
-
-
-
-
-
     //database functions:
     /**
      * Saves an [article] to **database** via [newsRepository]
@@ -136,13 +120,6 @@ class NewsViewModel(
     }
 
 
-
-
-
-
-
-
-
     //internet availability and exception handling functions:
     /**
      * Calls [hasInternetConnection] and depending on internet availability
@@ -158,7 +135,7 @@ class NewsViewModel(
                 breakingNews.postValue(Resource.Error("No Internet connection..."))
             }
         } catch (t: Throwable) {
-            when(t){
+            when (t) {
                 is IOException -> breakingNews.postValue(Resource.Error("Network Failure"))
                 else -> breakingNews.postValue(Resource.Error("Conversion Error"))
             }
@@ -179,7 +156,7 @@ class NewsViewModel(
                 searchNews.postValue(Resource.Error("No Internet connection..."))
             }
         } catch (t: Throwable) {
-            when(t){
+            when (t) {
                 is IOException -> searchNews.postValue(Resource.Error("Network Failure"))
                 else -> searchNews.postValue(Resource.Error("Conversion Error"))
             }
