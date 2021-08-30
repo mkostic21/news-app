@@ -25,8 +25,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
-    NewsAdapter.OnItemClickListener, NewsAdapter.OnMenuClickListener {
+class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
     private lateinit var binding: FragmentSearchNewsBinding
     private lateinit var newsAdapter: NewsAdapter
@@ -42,6 +41,8 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
         setRetryButtonClickListener()
         handleResponseData()
         searchNews()
+        articleItemOnClick()
+        moreOptionsMenuListener()
 
     }
 
@@ -141,7 +142,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
      *  Also adds custom ***OnScrollListener*** defined *below*
      */
     private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter(this, this)
+        newsAdapter = NewsAdapter()
         binding.rvSearchNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
@@ -234,28 +235,32 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news),
      *
      * Then navigates to [ArticleFragment]
      */
-    override fun onItemClick(article: Article) {
-        val bundle = Bundle().apply {
-            putSerializable("article", article)
+    private fun articleItemOnClick() {
+        newsAdapter.setOnItemClickListener { article ->
+            val bundle = Bundle().apply {
+                putSerializable("article", article)
+            }
+            navigateToArticleFragment(bundle)
         }
-        navigateToArticleFragment(bundle)
     }
 
     /**
      * defines each [MenuItem] functionality
      */
-    override fun onMenuItemClick(item: MenuItem?, article: Article) {
-        when (item!!.itemId) {
-            R.id.menuAddToFav -> {
-                viewModel.saveArticle(article)
-                Snackbar.make(binding.root, "Article saved successfully", Snackbar.LENGTH_SHORT)
-                    .show()
-            }
-            R.id.menuShare -> {
-                Toast.makeText(binding.root.context, item.title, Toast.LENGTH_SHORT).show()
-            }
-            R.id.menuRemove -> {
-                Toast.makeText(binding.root.context, item.title, Toast.LENGTH_SHORT).show()
+    private fun moreOptionsMenuListener() {
+        newsAdapter.setOnMenuItemClickListener { menuItem, article ->
+            when (menuItem.itemId) {
+                R.id.menuAddToFav -> {
+                    viewModel.saveArticle(article)
+                    Snackbar.make(binding.root, "Article saved successfully", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+                R.id.menuShare -> {
+                    Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
+                }
+                R.id.menuRemove -> {
+                    Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

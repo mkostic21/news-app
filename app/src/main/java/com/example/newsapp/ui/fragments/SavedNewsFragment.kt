@@ -17,8 +17,7 @@ import com.example.newsapp.ui.NewsActivity
 import com.example.newsapp.ui.NewsViewModel
 import com.google.android.material.snackbar.Snackbar
 
-class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.OnItemClickListener,
-    NewsAdapter.OnMenuClickListener {
+class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
 
     private lateinit var binding: FragmentSavedNewsBinding
     private lateinit var newsAdapter: NewsAdapter
@@ -31,6 +30,8 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
 
         setupRecyclerView()
         loadSavedArticlesFromDB()
+        articleItemOnClick()
+        moreOptionsMenuListener()
 
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
@@ -81,7 +82,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
      * custom ***OnClickListener*** in the constructor.
      */
     private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter(this, this)
+        newsAdapter = NewsAdapter()
         binding.rvSavedNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
@@ -118,27 +119,32 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news), NewsAdapter.On
      *
      * Then navigates to [ArticleFragment]
      */
-    override fun onItemClick(article: Article) {
-        val bundle = Bundle().apply {
-            putSerializable("article", article)
+    private fun articleItemOnClick() {
+        newsAdapter.setOnItemClickListener { article ->
+            val bundle = Bundle().apply {
+                putSerializable("article", article)
+            }
+            navigateToArticleFragment(bundle)
         }
-        navigateToArticleFragment(bundle)
     }
+
 
     /**
      * defines each [MenuItem] functionality
      */
-    override fun onMenuItemClick(item: MenuItem?, article: Article) {
-        when (item!!.itemId) {
-            R.id.menuAddToFav -> {
-                Snackbar.make(binding.root, "Item already saved", Snackbar.LENGTH_SHORT)
-                    .show()
-            }
-            R.id.menuShare -> {
-                Toast.makeText(binding.root.context, item.title, Toast.LENGTH_SHORT).show()
-            }
-            R.id.menuRemove -> {
-                Toast.makeText(binding.root.context, item.title, Toast.LENGTH_SHORT).show()
+    private fun moreOptionsMenuListener() {
+        newsAdapter.setOnMenuItemClickListener { menuItem, article ->
+            when (menuItem.itemId) {
+                R.id.menuAddToFav -> {
+                    Snackbar.make(binding.root, "Item already saved", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+                R.id.menuShare -> {
+                    Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
+                }
+                R.id.menuRemove -> {
+                    Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

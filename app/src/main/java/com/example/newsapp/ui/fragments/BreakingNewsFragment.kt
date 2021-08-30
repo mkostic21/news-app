@@ -19,8 +19,7 @@ import com.example.newsapp.util.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.newsapp.util.Resource
 import com.google.android.material.snackbar.Snackbar
 
-class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
-    NewsAdapter.OnItemClickListener, NewsAdapter.OnMenuClickListener {
+class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
     private lateinit var binding: FragmentBreakingNewsBinding
     private lateinit var newsAdapter: NewsAdapter
@@ -34,6 +33,9 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
         setupRecyclerView()
         setRetryButtonClickListener()
         handleResponseData()
+
+        articleItemOnClick()
+        moreOptionsMenuListener()
     }
 
 
@@ -109,7 +111,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
      *  Also adds custom ***OnScrollListener*** defined *below*
      */
     private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter(this, this)
+        newsAdapter = NewsAdapter()
         binding.rvBreakingNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
@@ -152,7 +154,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
 
     private fun isArticleListEmpty(): Boolean {
         return newsAdapter.differ.currentList.isEmpty()
-        //TODO: combine showing/hiding empty list message in this func
     }
 
 
@@ -203,36 +204,40 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news),
 
 
     /**
-     * Puts passed [article] into a [Bundle].
+     * Puts passed [Article] into a [Bundle].
      *
      * Then navigates to [ArticleFragment]
      */
-    override fun onItemClick(article: Article) {
-        val bundle = Bundle().apply {
-            putSerializable("article", article)
+    private fun articleItemOnClick() {
+        newsAdapter.setOnItemClickListener { article ->
+            val bundle = Bundle().apply {
+                putSerializable("article", article)
+            }
+            navigateToArticleFragment(bundle)
         }
-
-        navigateToArticleFragment(bundle)
     }
 
     /**
      * defines each [MenuItem] functionality
      */
-    override fun onMenuItemClick(item: MenuItem?, article: Article) {
-        when (item!!.itemId) {
-            R.id.menuAddToFav -> {
-                viewModel.saveArticle(article)
-                Snackbar.make(binding.root, "Article saved successfully", Snackbar.LENGTH_SHORT)
-                    .show()
-            }
-            R.id.menuShare -> {
-                Toast.makeText(binding.root.context, item.title, Toast.LENGTH_SHORT).show()
-            }
-            R.id.menuRemove -> {
-                Toast.makeText(binding.root.context, item.title, Toast.LENGTH_SHORT).show()
+    private fun moreOptionsMenuListener() {
+        newsAdapter.setOnMenuItemClickListener { menuItem, article ->
+            when (menuItem.itemId) {
+                R.id.menuAddToFav -> {
+                    viewModel.saveArticle(article)
+                    Snackbar.make(binding.root, "Article saved successfully", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+                R.id.menuShare -> {
+                    Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
+                }
+                R.id.menuRemove -> {
+                    Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
+
 
     /**
      * Passes [bundle] and navigates to [ArticleFragment] via *NavController*

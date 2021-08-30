@@ -18,51 +18,54 @@ import com.example.newsapp.ui.NewsViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class NewsAdapter(
-    private val articleItemListener: OnItemClickListener,
-    private val popupMenuListener: OnMenuClickListener
 ) : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
     inner class ArticleViewHolder(val binding: ItemArticlePreviewBinding) :
-        RecyclerView.ViewHolder(binding.root), PopupMenu.OnMenuItemClickListener,
-        View.OnClickListener {
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
+            var article: Article
+
+            // listener for each article item in recycler view
+            binding.root.setOnClickListener {
+                article = differ.currentList[adapterPosition]
+                onItemClickListener?.let { it(article) }
+            }
+
+            //popup menu button and menu-item listeners
             binding.btnMoreOptions.setOnClickListener {
-                val position = adapterPosition
-                showPopupMenu(binding, position)
+                article = differ.currentList[adapterPosition]
+                val popup = PopupMenu(binding.root.context, binding.btnMoreOptions).apply {
+                    inflate(R.menu.more_options_menu)
+                    setOnMenuItemClickListener { menuItem: MenuItem ->
+                        when (menuItem.itemId) {
+                            R.id.menuAddToFav -> {
+                                onMenuItemClickListener?.let { it(menuItem, article) }
+                            }
+                            R.id.menuShare -> {
+                                onMenuItemClickListener?.let { it(menuItem, article) }
+                            }
+                            R.id.menuRemove -> {
+                                onMenuItemClickListener?.let { it(menuItem, article) }
+                            }
+                        }
+                        true
+                    }
+                }
+                popup.show()
             }
-            binding.root.setOnClickListener(this) //sets a click listener to each item in RecyclerView
+
         }
 
-        /**
-         * checking if *clicked* item is **deleted** before the delete animation finishes, with *adapterPosition* value.
-         *
-         * adapterPosition = **-1** if clicked item is **deleted**
-         */
-        override fun onClick(v: View?) {
-            val position = adapterPosition
-            val article = differ.currentList[position]
-            if (position != RecyclerView.NO_POSITION) {
-                articleItemListener.onItemClick(article)
-            }
-        }
-
-
-        override fun onMenuItemClick(item: MenuItem?): Boolean {
-            val position = adapterPosition
-            val article = differ.currentList[position]
-            popupMenuListener.onMenuItemClick(item, article)
-            return true
-        }
     }
 
 
     /**
-     * Keeps the **Article** list updated.
+     * Keeps the [Article] list updated.
      *
-     * *Articles* are received from *API*, but *ID* property is used for *local DB*.
+     * *Articles* are received from *API*, *ID* is used for *local DB*.
      *
-     * So we compare *URLs*, which is unique for every *Article*
+     * Compares *URLs*, which is unique for every [Article]
      */
     private val differCallback = object : DiffUtil.ItemCallback<Article>() {
         override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
@@ -105,41 +108,19 @@ class NewsAdapter(
 
 
     /**
-     * displays pop-up menu and passes clicked [MenuItem] and [Article] through [popupMenuListener]
+     * Custom listener to pass clicked [Article]
      */
-    private fun showPopupMenu(binding: ItemArticlePreviewBinding, position: Int) {
-        val popup = PopupMenu(binding.root.context, binding.btnMoreOptions)
-        popup.inflate(R.menu.more_options_menu)
-        popup.setOnMenuItemClickListener { item: MenuItem? ->
-            when (item!!.itemId) {
-                R.id.menuAddToFav -> {
-                    popupMenuListener.onMenuItemClick(item, differ.currentList[position])
-                }
-                R.id.menuShare -> {
-                    //TODO: not implemented
-                }
-                R.id.menuRemove -> {
-                    //TODO: not implemented
-                }
-            }
-            true
-        }
-        popup.show()
-    }
-
-
-    /**
-     * Defined custom interface to pass clicked [Article] through [onItemClick]
-     */
-    interface OnItemClickListener {
-        fun onItemClick(article: Article)
+    private var onItemClickListener: ((Article) -> Unit)? = null
+    fun setOnItemClickListener(listener: (Article) -> Unit) {
+        onItemClickListener = listener
     }
 
     /**
-     * Defined custom interface to pass clicked [MenuItem] and [Article]
+     * custom listener passes [MenuItem] and [Article]
      */
-    interface OnMenuClickListener {
-        fun onMenuItemClick(item: MenuItem?, article: Article)
+    private var onMenuItemClickListener: ((MenuItem, Article) -> Unit)? = null
+    fun setOnMenuItemClickListener(listener: (MenuItem, Article) -> Unit) {
+        onMenuItemClickListener = listener
     }
 
 
