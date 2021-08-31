@@ -168,7 +168,7 @@ class NewsViewModel(
      *
      * *Possible connection types*: ***Wi-Fi, Cellular*** *or* ***Ethernet***
      */
-    private fun hasInternetConnection(): Boolean {
+    fun hasInternetConnection(): Boolean {
         val connectivityManager = getApplication<NewsApplication>().getSystemService(
             Context.CONNECTIVITY_SERVICE
         ) as ConnectivityManager

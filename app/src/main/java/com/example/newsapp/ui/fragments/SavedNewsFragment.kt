@@ -130,7 +130,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
 
 
     /**
-     * defines each [MenuItem] functionality
+     * defines each [MenuItem] click functionality
      */
     private fun moreOptionsMenuListener() {
         newsAdapter.setOnMenuItemClickListener { menuItem, article ->
@@ -140,9 +140,11 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
                         .show()
                 }
                 R.id.menuShare -> {
+                    //TODO:
                     Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
                 }
                 R.id.menuRemove -> {
+                    //TODO:
                     Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
                 }
             }
