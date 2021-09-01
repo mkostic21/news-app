@@ -1,11 +1,10 @@
 package com.example.newsapp.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
-import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,9 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ItemArticlePreviewBinding
 import com.example.newsapp.models.Article
-import com.example.newsapp.ui.NewsActivity
-import com.example.newsapp.ui.NewsViewModel
-import com.google.android.material.snackbar.Snackbar
+import kotlin.Exception
 
 class NewsAdapter(
 ) : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
@@ -39,7 +36,7 @@ class NewsAdapter(
                     inflate(R.menu.more_options_menu)
                     setOnMenuItemClickListener { menuItem: MenuItem ->
                         when (menuItem.itemId) {
-                            R.id.menuAddToFav -> {
+                            R.id.menuSave -> {
                                 onMenuItemClickListener?.let { it(menuItem, article) }
                             }
                             R.id.menuShare -> {
@@ -51,8 +48,21 @@ class NewsAdapter(
                         }
                         true
                     }
+
+                    //show menu icons
+                    try {
+                        val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
+                            .apply { isAccessible = true }
+                        val mPopup = fieldMPopup.get(this)
+                        mPopup.javaClass
+                            .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                            .invoke(mPopup, true)
+                    } catch (e: Exception){
+                        Log.e("Adapter", "Error showing menu icons", e)
+                    } finally {
+                        this.show()
+                    }
                 }
-                popup.show()
             }
 
         }

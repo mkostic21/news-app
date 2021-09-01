@@ -115,7 +115,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
     }
 
     /**
-     * Puts passed [article] into a [Bundle].
+     * Puts passed [Article] into a [Bundle].
      *
      * Then navigates to [ArticleFragment]
      */
@@ -133,18 +133,18 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
      * defines each [MenuItem] click functionality
      */
     private fun moreOptionsMenuListener() {
-        newsAdapter.setOnMenuItemClickListener { menuItem, article ->
+        newsAdapter.setOnMenuItemClickListener { menuItem, _ ->
             when (menuItem.itemId) {
-                R.id.menuAddToFav -> {
+                R.id.menuSave -> {
                     Snackbar.make(binding.root, "Item already saved", Snackbar.LENGTH_SHORT)
                         .show()
                 }
                 R.id.menuShare -> {
-                    //TODO:
+                    //TODO: not implemented yet
                     Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
                 }
                 R.id.menuRemove -> {
-                    //TODO:
+                    //TODO: not implemented yet
                     Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
                 }
             }

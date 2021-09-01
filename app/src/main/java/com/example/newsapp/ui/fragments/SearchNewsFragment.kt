@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.R
 import com.example.newsapp.adapters.NewsAdapter
 import com.example.newsapp.databinding.FragmentSearchNewsBinding
-import com.example.newsapp.models.Article
 import com.example.newsapp.ui.NewsActivity
 import com.example.newsapp.ui.NewsViewModel
 import com.example.newsapp.util.Constants.Companion.QUERY_PAGE_SIZE
@@ -250,7 +249,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     private fun moreOptionsMenuListener() {
         newsAdapter.setOnMenuItemClickListener { menuItem, article ->
             when (menuItem.itemId) {
-                R.id.menuAddToFav -> {
+                R.id.menuSave -> {
                     viewModel.saveArticle(article)
                     Snackbar.make(binding.root, "Article saved successfully", Snackbar.LENGTH_SHORT)
                         .show()

@@ -1,16 +1,28 @@
 <resources>
-    <!--TODO: group by views -->
+    <!-- app -->
     <string name="app_name">News App</string>
+
+    <!-- SearchNews Fragment -->
     <string name="news_search_hint">Search…</string>
+
+    <!-- Article Fragment -->
     <string name="fab_favourite_description">Add to favourites</string>
+
+    <!-- BreakingNews Fragment -->
+    <string name="article_preview_image_description">Article preview image</string>
+
+    <!-- Nav View -->
     <string name="bottom_navigation_menu_breaking_news">Breaking News</string>
     <string name="bottom_navigation_menu_saved_news">Saved News</string>
     <string name="bottom_navigation_menu_search_news">Search News</string>
-    <string name="article_preview_image_description">Article preview image</string>
-    <string name="item_error_message_button_text">Retry</string>
-    <string name="more_options_menu_add_to_favourites">Add to favourites</string>
+
+    <!-- Popup Menu -->
+    <string name="more_options_menu_save">Save</string>
+    <string name="more_options_menu_remove">Remove</string>
     <string name="more_options_menu_share">Share</string>
-    <string name="more_options_menu_remove_from_feed">Remove from feed</string>
+
+    <!-- Exceptions misc -->
+    <string name="item_error_message_button_text">Retry</string>
     <string name="item_error_message_default">Failed to connect</string>
     <string name="item_empty_list_message">No items found</string>
 </resources>

@@ -223,7 +223,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     private fun moreOptionsMenuListener() {
         newsAdapter.setOnMenuItemClickListener { menuItem, article ->
             when (menuItem.itemId) {
-                R.id.menuAddToFav -> {
+                R.id.menuSave -> {
                     viewModel.saveArticle(article)
                     Snackbar.make(binding.root, "Article saved successfully", Snackbar.LENGTH_SHORT)
                         .show()

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menuAddToFav"
-        android:title="@string/more_options_menu_add_to_favourites" />
-    <item
-        android:id="@+id/menuShare"
-        android:title="@string/more_options_menu_share" />
+        android:id="@+id/menuSave"
+        android:icon="@drawable/ic_menu_save"
+        android:title="@string/more_options_menu_save" />
     <item
         android:id="@+id/menuRemove"
-        android:title="@string/more_options_menu_remove_from_feed" />
-
-    <!-- TODO: more items in future (needs features) -->
+        android:icon="@drawable/ic_menu_remove"
+        android:title="@string/more_options_menu_remove" />
+    <item
+        android:id="@+id/menuShare"
+        android:icon="@drawable/ic_menu_share"
+        android:title="@string/more_options_menu_share" />
 
 </menu>
