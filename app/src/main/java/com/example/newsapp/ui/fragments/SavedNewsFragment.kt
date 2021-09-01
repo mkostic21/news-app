@@ -133,19 +133,28 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
      * defines each [MenuItem] click functionality
      */
     private fun moreOptionsMenuListener() {
-        newsAdapter.setOnMenuItemClickListener { menuItem, _ ->
+        newsAdapter.setOnMenuItemClickListener { menuItem, article ->
             when (menuItem.itemId) {
                 R.id.menuSave -> {
                     Snackbar.make(binding.root, "Item already saved", Snackbar.LENGTH_SHORT)
                         .show()
                 }
                 R.id.menuShare -> {
-                    //TODO: not implemented yet
-                    Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
+                    viewModel.copyToClipboard(article.url)
+                    Toast.makeText(binding.root.context, "URL copied!", Toast.LENGTH_SHORT).show()
                 }
                 R.id.menuRemove -> {
-                    //TODO: not implemented yet
-                    Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
+                    viewModel.deleteArticle(article)
+                    Snackbar.make(
+                        binding.root,
+                        "Successfully deleted article",
+                        Snackbar.LENGTH_LONG
+                    ).apply {
+                        setAction("Undo") {
+                            viewModel.saveArticle(article)
+                        }
+                        show()
+                    }
                 }
             }
         }

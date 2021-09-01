@@ -255,9 +255,11 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                         .show()
                 }
                 R.id.menuShare -> {
-                    Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
+                    viewModel.copyToClipboard(article.url)
+                    Toast.makeText(binding.root.context, "URL copied!", Toast.LENGTH_SHORT).show()
                 }
                 R.id.menuRemove -> {
+                    //TODO: not implemented
                     Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
                 }
             }

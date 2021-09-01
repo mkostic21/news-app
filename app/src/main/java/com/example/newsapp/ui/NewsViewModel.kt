@@ -1,6 +1,8 @@
 package com.example.newsapp.ui
 
 import android.app.Application
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities.*
@@ -180,5 +182,14 @@ class NewsViewModel(
             capabilities.hasTransport(TRANSPORT_ETHERNET) -> true
             else -> false
         }
+    }
+
+
+    fun copyToClipboard(text: String?) {
+        val clipboard = getApplication<NewsApplication>().getSystemService(
+            Context.CLIPBOARD_SERVICE
+        ) as ClipboardManager
+        val clip = ClipData.newPlainText("label", text)
+        clipboard.setPrimaryClip(clip)
     }
 }

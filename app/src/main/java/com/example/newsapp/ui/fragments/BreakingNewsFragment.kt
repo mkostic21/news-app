@@ -60,9 +60,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                     hideErrorMessage()
                     hideEmptyListMessage()
                     response.data?.let { newsResponse ->
-                        newsAdapter.differ.submitList(newsResponse.articles.toList())
-                        val totalPages =
-                            newsResponse.totalResults / QUERY_PAGE_SIZE + 2 //2 = 1 empty page at the end + 1 for INT rounding when dividing TODO: Separate func
+                        newsAdapter.differ.submitList(newsResponse.articles.toMutableList())
+                        val totalPages = newsResponse.totalResults / QUERY_PAGE_SIZE + 2 //2 = 1 empty page at the end + 1 for INT rounding when dividing TODO: Separate func
                         isLastPage = viewModel.breakingNewsPage == totalPages
                         if (isLastPage) {
                             binding.rvBreakingNews.setPadding(0, 0, 0, 0)
@@ -229,10 +228,11 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                         .show()
                 }
                 R.id.menuShare -> {
-                    Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
+                    viewModel.copyToClipboard(article.url)
+                    Toast.makeText(binding.root.context, "URL copied!", Toast.LENGTH_SHORT).show()
                 }
                 R.id.menuRemove -> {
-                    Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
+                    //Todo: not implemented
                 }
             }
         }

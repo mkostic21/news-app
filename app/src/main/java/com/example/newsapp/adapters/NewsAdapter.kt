@@ -14,8 +14,7 @@ import com.example.newsapp.databinding.ItemArticlePreviewBinding
 import com.example.newsapp.models.Article
 import kotlin.Exception
 
-class NewsAdapter(
-) : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
+class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
     inner class ArticleViewHolder(val binding: ItemArticlePreviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -32,7 +31,7 @@ class NewsAdapter(
             //popup menu button and menu-item listeners
             binding.btnMoreOptions.setOnClickListener {
                 article = differ.currentList[adapterPosition]
-                val popup = PopupMenu(binding.root.context, binding.btnMoreOptions).apply {
+                PopupMenu(binding.root.context, binding.btnMoreOptions).apply {
                     inflate(R.menu.more_options_menu)
                     setOnMenuItemClickListener { menuItem: MenuItem ->
                         when (menuItem.itemId) {
@@ -64,7 +63,6 @@ class NewsAdapter(
                     }
                 }
             }
-
         }
 
     }
