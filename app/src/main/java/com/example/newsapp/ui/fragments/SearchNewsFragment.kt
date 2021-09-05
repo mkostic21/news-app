@@ -259,8 +259,28 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                     Toast.makeText(binding.root.context, "URL copied!", Toast.LENGTH_SHORT).show()
                 }
                 R.id.menuRemove -> {
-                    //TODO: not implemented
-                    Toast.makeText(binding.root.context, menuItem.title, Toast.LENGTH_SHORT).show()
+                    val position = newsAdapter.differ.currentList.indexOf(article)
+
+                    //remove article from recycler
+                    viewModel.searchNews.observe(viewLifecycleOwner, { response ->
+                        response.data?.articles?.remove(article)
+                        newsAdapter.differ.submitList(response.data?.articles?.toList())
+                    })
+
+                    //restore removed article
+                    Snackbar.make(
+                        binding.root,
+                        "Successfully deleted article",
+                        Snackbar.LENGTH_LONG
+                    ).apply {
+                        setAction("Undo") {
+                            viewModel.searchNews.observe(viewLifecycleOwner, { response ->
+                                response.data?.articles?.add(position, article)
+                                newsAdapter.differ.submitList(response.data?.articles?.toList())
+                            })
+                        }
+                        show()
+                    }
                 }
             }
         }
