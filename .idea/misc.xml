@@ -5,7 +5,10 @@
       <map>
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/ic_all_news.xml" value="0.35625" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/ic_favourite.xml" value="0.35625" />
+        <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/ic_icon_foreground.xml" value="0.35625" />
+        <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.35625" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/ic_menu_hide.xml" value="0.35625" />
+        <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/splash_image.xml" value="0.35625" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/layout/activity_news.xml" value="0.25" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/layout/fragment_article.xml" value="0.25" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/layout/fragment_breaking_news.xml" value="0.25" />
@@ -16,6 +19,9 @@
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/layout/item_error_message.xml" value="0.22" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.3359375" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/menu/more_options_menu.xml" value="0.3359375" />
+        <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/mipmap-anydpi-v26/ic_icon.xml" value="0.35625" />
+        <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.35625" />
+        <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.35625" />
       </map>
     </option>
   </component>
