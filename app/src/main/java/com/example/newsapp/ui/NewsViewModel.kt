@@ -77,19 +77,16 @@ class NewsViewModel(
     }
 
     /**
-     * Handles *pagination* of displayed search results and updates *RecyclerView* list of **articles**
+     *  Updates *RecyclerView* list of **articles**
      *
      * (appends new data to existing data in a list)
      */
     private fun handleSearchNewsResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
         if (response.isSuccessful) {
             response.body()?.let { resultResponse ->
-                if (searchNewsResponse == null || newSearchQuery != oldSearchQuery) {
-                    searchNewsPage = 1
-                    oldSearchQuery = newSearchQuery
+                if (searchNewsResponse == null){
                     searchNewsResponse = resultResponse
                 } else {
-                    searchNewsPage++
                     val oldArticles = searchNewsResponse?.articles
                     val newArticles = resultResponse.articles
                     oldArticles?.addAll(newArticles)
@@ -147,12 +144,22 @@ class NewsViewModel(
     /**
      * Calls [hasInternetConnection] and depending on internet availability
      * requests a network call via [newsRepository]
+     * Handles *pagination* of displayed search results
      */
     private suspend fun safeSearchNewsCall(searchQuery: String) {
+        newSearchQuery = searchQuery
+
+        //if a new search query is requested -> reset data
+        if(newSearchQuery != oldSearchQuery){
+            searchNewsPage = 1
+            oldSearchQuery = newSearchQuery
+            searchNewsResponse = null
+        }
         searchNews.postValue(Resource.Loading())
         try {
             if (hasInternetConnection()) {
-                val response = newsRepository.searchNews(searchQuery, searchNewsPage)
+                //after each query increment page number for next query (paginate)
+                val response = newsRepository.searchNews(searchQuery, searchNewsPage++)
                 searchNews.postValue(handleSearchNewsResponse(response))
             } else {
                 searchNews.postValue(Resource.Error("No Internet connection..."))

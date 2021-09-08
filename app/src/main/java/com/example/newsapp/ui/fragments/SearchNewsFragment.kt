@@ -52,6 +52,10 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     var isLastPage = false
     var isScrolling = false
 
+    // textChangedListener helper vars
+    var newSearchQuery: String? = null
+    var oldSearchQuery: String? = null
+
 
     /**
      * Calls ***ViewModel.SearchNews()*** with a [String] specified in **etSearch**
@@ -65,7 +69,13 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                 delay(SEARCH_NEWS_TIME_DELAY)
                 editable?.let {
                     if (editable.toString().isNotEmpty()) {
-                        viewModel.searchNews(editable.toString())
+                        newSearchQuery = editable.toString()
+
+                        //ONLY if a new query is entered, request network call (on back from WebView don't request the same query)
+                        if (newSearchQuery != oldSearchQuery) {
+                            oldSearchQuery = newSearchQuery
+                            viewModel.searchNews(editable.toString())
+                        }
                     }
                 }
             }
@@ -195,7 +205,6 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
-            //TODO: data class + more readable funcs for ifChecks
             //Pagination* and *View* helper vars for better readability
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
@@ -211,8 +220,10 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                 isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
 
             if (shouldPaginate) {
-                viewModel.getBreakingNews("us")
+                viewModel.searchNews(binding.etSearch.text.toString())
                 isScrolling = false
+
+
             }
         }
 
