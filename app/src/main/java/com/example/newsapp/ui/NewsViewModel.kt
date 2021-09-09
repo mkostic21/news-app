@@ -30,7 +30,7 @@ class NewsViewModel(
     var searchNewsPage = 1
     private var searchNewsResponse: NewsResponse? = null
     private var newSearchQuery: String? = null
-    private var oldSearchQuery: String? = null
+    var oldSearchQuery: String? = null
 
     init {
         getBreakingNews("us") //TODO: input countryCode from app

@@ -36,6 +36,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         binding = FragmentSearchNewsBinding.bind(view)
         viewModel = (activity as NewsActivity).viewModel
 
+        handleOldSearchQuery()
         setupRecyclerView()
         setRetryButtonClickListener()
         handleResponseData()
@@ -44,6 +45,8 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         moreOptionsMenuListener()
 
     }
+
+
 
 
     // Status helper booleans for pagination
@@ -158,6 +161,12 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
             addOnScrollListener(this@SearchNewsFragment.scrollListener)
 
             showEmptyListMessage() //it's empty on init
+        }
+    }
+
+    private fun handleOldSearchQuery(){
+        viewModel.oldSearchQuery?.let {
+            binding.etSearch.setText(it)
         }
     }
 
