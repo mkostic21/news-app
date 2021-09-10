@@ -10,59 +10,72 @@
         android:id="@+id/ivArticleImage"
         android:layout_width="160dp"
         android:layout_height="90dp"
+        android:contentDescription="@string/article_preview_image_description"
         android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/article_preview_image_description" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvSource"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/article_item_preview_source_margin_top"
-        tools:text="SOURCE"
+        android:fontFamily="sans-serif"
         android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivArticleImage"/>
+        android:maxLines="1"
+        android:layout_marginEnd="@dimen/item_article_preview_margin"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toStartOf="@+id/btnMoreOptions"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvPublishedAt"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="SOURCE" />
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/item_article_preview_padding"
-        android:layout_marginEnd="@dimen/item_article_preview_padding"
+        android:layout_marginStart="@dimen/item_article_preview_margin"
         android:ellipsize="end"
-        tools:text="TITLE"
+        android:fontFamily="@font/wrc_roman"
+        android:maxLines="2"
         android:textColor="@color/black"
         android:textSize="15sp"
         android:textStyle="bold"
-        app:layout_constraintRight_toLeftOf="@+id/btnMoreOptions"
-        app:layout_constraintLeft_toRightOf="@id/ivArticleImage"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintEnd_toStartOf="@+id/btnMoreOptions"
+        app:layout_constraintStart_toEndOf="@id/ivArticleImage"
+        app:layout_constraintTop_toBottomOf="@id/btnMoreOptions"
+        tools:text="TITLE" />
 
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/item_article_preview_margin"
-        android:layout_marginTop="@dimen/article_item_preview_source_margin_top"
+        android:layout_marginTop="4dp"
         android:ellipsize="end"
-        android:maxLines="5"
-        tools:text="DESCRIPTION"
+        android:fontFamily="@font/wrc_roman"
+        android:maxLines="2"
         android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnMoreOptions"
         app:layout_constraintStart_toEndOf="@id/ivArticleImage"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"/>
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        tools:text="DESCRIPTION" />
 
     <TextView
         android:id="@+id/tvPublishedAt"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/item_article_preview_margin"
-        tools:text="PUBLISHED AT"
+        android:layout_marginHorizontal="@dimen/item_article_preview_padding"
+        android:fontFamily="@font/wrc_roman"
         android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSource"/>
+        android:maxLines="1"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/tvSource"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivArticleImage"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="PUBLISHED AT" />
 
     <ImageButton
         android:id="@+id/btnMoreOptions"
