@@ -13,7 +13,6 @@
         android:text="@string/item_empty_list_message"
         android:textAlignment="center"
         android:textSize="20sp"
-        android:textColor="@color/black_50_transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

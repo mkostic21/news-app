@@ -20,7 +20,6 @@ class NewsActivity : AppCompatActivity(){
         setTheme(R.style.Theme_NewsApp)
         binding = ActivityNewsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar?.hide()
 
         val newsRepository = NewsRepository(ArticleDatabase(this))
         val viewModelProviderFactory = NewsViewModelProviderFactory(application, newsRepository)
