@@ -25,4 +25,7 @@
     <string name="item_error_message_button_text">Retry</string>
     <string name="item_error_message_default">Failed to connect</string>
     <string name="item_empty_list_message">No items found</string>
+
+    <!-- Article Item Preview -->
+    <string name="publishedAt">%1$s | %2$d %3$s %4$d</string>
 </resources>

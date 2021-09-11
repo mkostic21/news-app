@@ -1,5 +1,6 @@
 package com.example.newsapp.adapters
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -8,10 +9,13 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ItemArticlePreviewBinding
 import com.example.newsapp.models.Article
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import kotlin.Exception
 
 class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
@@ -56,7 +60,7 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
                         mPopup.javaClass
                             .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
                             .invoke(mPopup, true)
-                    } catch (e: Exception){
+                    } catch (e: Exception) {
                         Log.e("Adapter", "Error showing menu icons", e)
                     } finally {
                         this.show()
@@ -100,15 +104,44 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = differ.currentList[position]
+        val imgCircularProgressBar = setCircularProgressDrawable(holder.binding.root.context)
 
         holder.binding.apply {
-            Glide.with(root).load(article.urlToImage).into(ivArticleImage)
+            Glide.with(root).load(article.urlToImage).placeholder(imgCircularProgressBar)
+                .into(ivArticleImage)
             tvSource.text = article.source?.name
             tvTitle.text = article.title
             tvDescription.text = article.description
-            tvPublishedAt.text = article.publishedAt
+            tvPublishedAt.text = getFormattedDate(article.publishedAt, holder.binding.root.context)
+
         }
     }
+
+    //Placeholder for Glide while loading images
+    private fun setCircularProgressDrawable(context: Context): CircularProgressDrawable {
+        return CircularProgressDrawable(context).apply {
+            strokeWidth = 5f
+            centerRadius = 30f
+            start()
+        }
+    }
+
+    /**
+     * @return string: "DAY_OF_WEEK | DAY SHORT-MONTH YEAR"
+     */
+    private fun getFormattedDate(input: String?, context: Context): String {
+        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        val date = LocalDate.parse(input, dateFormat)
+        return context.resources.getString(
+            R.string.publishedAt,
+            date.dayOfWeek.toString().lowercase().replaceFirstChar { it.uppercase() }, //from -> to: FRIDAY -> Friday
+            date.dayOfMonth,
+            date.month.toString().lowercase().replaceFirstChar { it.uppercase() }
+                .removeRange(3, date.month.toString().length), //from -> to: SEPTEMBER -> Sep
+            date.year
+        )
+    }
+
 
     override fun getItemCount(): Int {
         return differ.currentList.size

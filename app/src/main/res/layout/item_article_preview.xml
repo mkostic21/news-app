@@ -9,9 +9,10 @@
     <ImageView
         android:id="@+id/ivArticleImage"
         android:layout_width="160dp"
-        android:layout_height="90dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/article_preview_image_description"
         android:scaleType="centerCrop"
+        android:layout_marginVertical="@dimen/item_article_preview_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,15 +21,13 @@
         android:id="@+id/tvSource"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/item_article_preview_margin"
+        android:layout_marginTop="@dimen/item_article_preview_margin"
         android:fontFamily="sans-serif"
         android:textColor="@color/black"
-        android:maxLines="1"
-        android:layout_marginEnd="@dimen/item_article_preview_margin"
         android:textSize="13sp"
-        app:layout_constraintEnd_toStartOf="@+id/btnMoreOptions"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvPublishedAt"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ivArticleImage"
+        app:layout_constraintTop_toBottomOf="@+id/tvDescription"
         tools:text="SOURCE" />
 
     <TextView
@@ -69,9 +68,8 @@
         android:layout_marginHorizontal="@dimen/item_article_preview_padding"
         android:fontFamily="@font/wrc_roman"
         android:textColor="@color/black"
-        android:maxLines="1"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/tvSource"
+        app:layout_constraintEnd_toStartOf="@+id/btnMoreOptions"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/ivArticleImage"
         app:layout_constraintTop_toTopOf="parent"
@@ -85,6 +83,5 @@
         android:src="@drawable/ic_more_options"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
