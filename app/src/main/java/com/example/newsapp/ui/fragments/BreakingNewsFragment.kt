@@ -1,12 +1,13 @@
 package com.example.newsapp.ui.fragments
 
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.AbsListView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.R
@@ -17,6 +18,7 @@ import com.example.newsapp.ui.NewsActivity
 import com.example.newsapp.ui.NewsViewModel
 import com.example.newsapp.util.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.newsapp.util.Resource
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 
 class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
@@ -27,6 +29,10 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //app bar menu
+        setHasOptionsMenu(true)
+        (activity as AppCompatActivity).supportActionBar?.title = "Breaking News"
+
         binding = FragmentBreakingNewsBinding.bind(view)
         viewModel = (activity as NewsActivity).viewModel
 
@@ -36,6 +42,22 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
         articleItemOnClick()
         moreOptionsMenuListener()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.app_bar_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.app_bar_settings -> {
+                navigateToSettingsFragment()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 
@@ -268,6 +290,12 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         binding.root.findNavController().navigate(
             R.id.action_breakingNewsFragment_to_articleFragment,
             bundle
+        )
+    }
+
+    private fun navigateToSettingsFragment() {
+        binding.root.findNavController().navigate(
+            R.id.action_breakingNewsFragment_to_settingsFragment
         )
     }
 

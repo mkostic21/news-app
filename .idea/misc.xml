@@ -8,6 +8,8 @@
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/ic_icon_foreground.xml" value="0.35625" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.35625" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/ic_menu_hide.xml" value="0.35625" />
+        <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/ic_more_options.xml" value="0.35625" />
+        <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/ic_settings.xml" value="0.35625" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/ic_splash.xml" value="0.35625" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/drawable/splash_image.xml" value="0.35625" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/layout/activity_news.xml" value="0.25" />
@@ -18,11 +20,13 @@
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/layout/item_article_preview.xml" value="0.33" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/layout/item_empty_list.xml" value="0.3079710144927536" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/layout/item_error_message.xml" value="0.22" />
+        <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/menu/app_bar_menu.xml" value="0.3359375" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.3359375" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/menu/more_options_menu.xml" value="0.3359375" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/mipmap-anydpi-v26/ic_icon.xml" value="0.35625" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.35625" />
         <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.35625" />
+        <entry key="..\:/Users/Mimi/AndroidStudioProjects/NewsApp/app/src/main/res/xml/root_preferences.xml" value="0.2930253623188406" />
       </map>
     </option>
   </component>

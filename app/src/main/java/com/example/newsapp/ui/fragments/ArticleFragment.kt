@@ -22,7 +22,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
 
     private lateinit var binding: FragmentArticleBinding
     lateinit var viewModel: NewsViewModel
-    val args: ArticleFragmentArgs by navArgs()
+    private val args: ArticleFragmentArgs by navArgs()
     lateinit var article: Article
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

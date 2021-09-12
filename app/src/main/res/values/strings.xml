@@ -21,6 +21,9 @@
     <string name="more_options_menu_remove">Remove</string>
     <string name="more_options_menu_share">Share</string>
 
+    <!-- App Bar Menu -->
+    <string name="app_bar_settings">Settings</string>
+
     <!-- Exceptions misc -->
     <string name="item_error_message_button_text">Retry</string>
     <string name="item_error_message_default">Failed to connect</string>
@@ -28,4 +31,19 @@
 
     <!-- Article Item Preview -->
     <string name="publishedAt">%1$s | %2$d %3$s %4$d</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
 </resources>
