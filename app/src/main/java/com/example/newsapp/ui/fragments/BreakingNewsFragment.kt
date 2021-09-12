@@ -44,7 +44,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         moreOptionsMenuListener()
     }
 
-
+    //App bar -> settings button
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.app_bar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)

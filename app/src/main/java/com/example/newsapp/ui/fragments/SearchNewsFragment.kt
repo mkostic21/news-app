@@ -1,10 +1,13 @@
 package com.example.newsapp.ui.fragments
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.AbsListView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -33,6 +36,10 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //app bar menu
+        setHasOptionsMenu(true)
+        (activity as AppCompatActivity).supportActionBar?.title = "Search News"
+
         binding = FragmentSearchNewsBinding.bind(view)
         viewModel = (activity as NewsActivity).viewModel
 
@@ -44,6 +51,22 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         articleItemOnClick()
         moreOptionsMenuListener()
 
+    }
+
+    //App bar -> settings button
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.app_bar_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.app_bar_settings -> {
+                navigateToSettingsFragment()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 
@@ -315,4 +338,11 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
             bundle
         )
     }
+
+    private fun navigateToSettingsFragment() {
+        binding.root.findNavController().navigate(
+            R.id.action_searchNewsFragment_to_settingsFragment
+        )
+    }
+
 }

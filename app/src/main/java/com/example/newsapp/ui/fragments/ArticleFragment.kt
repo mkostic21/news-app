@@ -8,6 +8,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
@@ -27,6 +28,9 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //app bar
+        (activity as AppCompatActivity).supportActionBar?.title = "Article Preview"
+
         binding = FragmentArticleBinding.bind(view)
         viewModel = (activity as NewsActivity).viewModel
         article = args.article

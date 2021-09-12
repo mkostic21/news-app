@@ -1,9 +1,12 @@
 package com.example.newsapp.ui.fragments
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -25,6 +28,10 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+         //app bar menu
+        setHasOptionsMenu(true)
+        (activity as AppCompatActivity).supportActionBar?.title = "Saved News"
+
         binding = FragmentSavedNewsBinding.bind(view)
         viewModel = (activity as NewsActivity).viewModel
 
@@ -75,6 +82,22 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         }
 
 
+    }
+
+    //App bar -> settings button
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.app_bar_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.app_bar_settings -> {
+                navigateToSettingsFragment()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     /**
@@ -167,6 +190,12 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         binding.root.findNavController().navigate(
             R.id.action_savedNewsFragment_to_articleFragment,
             bundle
+        )
+    }
+
+    private fun navigateToSettingsFragment() {
+        binding.root.findNavController().navigate(
+            R.id.action_savedNewsFragment_to_settingsFragment
         )
     }
 

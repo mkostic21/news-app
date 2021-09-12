@@ -13,8 +13,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            title = "Settings"
-        }
+        (activity as AppCompatActivity).supportActionBar?.title = "Settings"
     }
+
 }
