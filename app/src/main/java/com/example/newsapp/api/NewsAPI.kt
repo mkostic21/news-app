@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface NewsAPI {
 
     /**
-     * API Network request
+     * breaking news network request
      */
     @GET("v2/top-headlines")
     suspend fun getBreakingNews(
@@ -22,7 +22,7 @@ interface NewsAPI {
     ): Response<NewsResponse>
 
     /**
-     * API Network request
+     * Search news network request
      */
     @GET("v2/everything")
     suspend fun searchForNews(

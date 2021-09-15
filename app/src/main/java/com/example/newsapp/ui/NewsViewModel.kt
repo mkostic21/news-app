@@ -33,7 +33,7 @@ class NewsViewModel(
     var oldSearchQuery: String? = null
 
     init {
-        getBreakingNews("us") //TODO: input countryCode from app
+        getBreakingNews("us") //TODO: input countryCode from sharedPref
     }
 
 
