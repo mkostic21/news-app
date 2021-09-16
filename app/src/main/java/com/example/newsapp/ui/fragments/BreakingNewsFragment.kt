@@ -119,7 +119,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
      */
     private fun setRetryButtonClickListener() {
         binding.itemErrorMessage.btnRetry.setOnClickListener {
-            viewModel.getBreakingNews("us") //TODO: programmatic input for countryCode
+            viewModel.getBreakingNews()
             hideEmptyListMessage()
             hideErrorMessage()
         }
@@ -208,7 +208,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                 isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
 
             if (shouldPaginate) {
-                viewModel.getBreakingNews("us")
+                viewModel.getBreakingNews()
                 isScrolling = false
             }
         }
@@ -297,6 +297,16 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         binding.root.findNavController().navigate(
             R.id.action_breakingNewsFragment_to_settingsFragment
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        //check if settings changed -> call refresh with new parameters
+        viewModel.loadSettings(context)
+        if(viewModel.countryCodeChanged){
+            viewModel.getBreakingNews()
+        }
     }
 
 }

@@ -49,6 +49,8 @@ class NewsActivity : AppCompatActivity(){
         appBarConfiguration = AppBarConfiguration(fragments)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+
+
     }
 
     //app bar back button

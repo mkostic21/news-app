@@ -33,12 +33,12 @@
     <string name="publishedAt">%1$s | %2$d %3$s %4$d</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
+    <string name="news_localization_header">News localization</string>
     <string name="sync_header">Sync</string>
 
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <string name="news_country_title">Breaking news country</string>
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>

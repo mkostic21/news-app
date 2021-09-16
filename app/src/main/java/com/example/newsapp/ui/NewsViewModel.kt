@@ -9,6 +9,7 @@ import android.net.NetworkCapabilities.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.preference.PreferenceManager
 import com.example.newsapp.NewsApplication
 import com.example.newsapp.models.Article
 import com.example.newsapp.models.NewsResponse
@@ -22,18 +23,25 @@ class NewsViewModel(
     app: Application,
     private val newsRepository: NewsRepository
 ) : AndroidViewModel(app) {
+    //breaking news
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
     var breakingNewsPage = 1
     private var breakingNewsResponse: NewsResponse? = null
 
+    //search news
     val searchNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
     var searchNewsPage = 1
     private var searchNewsResponse: NewsResponse? = null
     private var newSearchQuery: String? = null
     var oldSearchQuery: String? = null
 
+    //sharedPreferences
+    private var countryCode = "us" //default
+    var countryCodeChanged = false
+
     init {
-        getBreakingNews("us") //TODO: input countryCode from sharedPref
+        loadSettings(app.applicationContext)
+        getBreakingNews()
     }
 
 
@@ -41,7 +49,7 @@ class NewsViewModel(
     /**
      * Calls [safeBreakingNewsCall]
      */
-    fun getBreakingNews(countryCode: String) = viewModelScope.launch {
+    fun getBreakingNews() = viewModelScope.launch {
         safeBreakingNewsCall(countryCode)   //emit loading state before making network request
     }
 
@@ -126,6 +134,14 @@ class NewsViewModel(
      */
     private suspend fun safeBreakingNewsCall(countryCode: String) {
         breakingNews.postValue(Resource.Loading()) //post loading state before making a network call
+
+        //if country code changed -> reset data
+        if(countryCodeChanged){
+            breakingNewsPage = 1
+            breakingNewsResponse = null
+            countryCodeChanged = false
+        }
+
         try {
             if (hasInternetConnection()) {
                 val response = newsRepository.getBreakingNews(countryCode, breakingNewsPage)
@@ -198,5 +214,16 @@ class NewsViewModel(
         ) as ClipboardManager
         val clip = ClipData.newPlainText("label", text)
         clipboard.setPrimaryClip(clip)
+    }
+
+    fun loadSettings(context: Context?){
+        val sp = PreferenceManager.getDefaultSharedPreferences(context)
+        val newCountryCode = sp.getString("country", "us")!!
+
+        //set flag if country code changed
+        if(newCountryCode != countryCode){
+            countryCode = newCountryCode
+            countryCodeChanged = true
+        }
     }
 }
