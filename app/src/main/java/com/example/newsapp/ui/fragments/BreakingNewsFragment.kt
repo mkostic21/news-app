@@ -296,6 +296,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         )
     }
 
+    //each chip replaces the curret category in viewModel and calls getNews to refresh list
     private fun setChipsListener() {
         binding.apply {
             chipBusiness.setOnCheckedChangeListener { chip, isChecked ->
@@ -306,10 +307,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                             viewModel.getBreakingNews()
                         }
                     }
-                } else {
-                    chipGeneral.isChecked = true
-                    viewModel.changeCategory("General")
-                    viewModel.getBreakingNews()
                 }
             }
 
@@ -321,17 +318,13 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                             viewModel.getBreakingNews()
                         }
                     }
-                } else {
-                    chipGeneral.isChecked = true
-                    viewModel.changeCategory("General")
-                    viewModel.getBreakingNews()
                 }
             }
 
             chipGeneral.setOnCheckedChangeListener { chip, isChecked ->
                 if (isChecked) {
                     if (viewModel.category != chip.text.toString()) {
-                        viewModel.changeCategory("General")
+                        viewModel.changeCategory(chip.text.toString())
                         if (viewModel.categoryChanged) {
                             viewModel.getBreakingNews()
                         }
@@ -347,10 +340,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                             viewModel.getBreakingNews()
                         }
                     }
-                } else {
-                    chipGeneral.isChecked = true
-                    viewModel.changeCategory("General")
-                    viewModel.getBreakingNews()
                 }
             }
 
@@ -362,10 +351,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                             viewModel.getBreakingNews()
                         }
                     }
-                } else {
-                    chipGeneral.isChecked = true
-                    viewModel.changeCategory("General")
-                    viewModel.getBreakingNews()
                 }
             }
 
@@ -377,10 +362,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                             viewModel.getBreakingNews()
                         }
                     }
-                } else {
-                    chipGeneral.isChecked = true
-                    viewModel.changeCategory("General")
-                    viewModel.getBreakingNews()
                 }
             }
 
@@ -392,10 +373,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                             viewModel.getBreakingNews()
                         }
                     }
-                } else {
-                    chipGeneral.isChecked = true
-                    viewModel.changeCategory("General")
-                    viewModel.getBreakingNews()
                 }
             }
         }
