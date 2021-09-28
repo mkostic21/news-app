@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.R
@@ -18,7 +17,6 @@ import com.example.newsapp.ui.NewsActivity
 import com.example.newsapp.ui.NewsViewModel
 import com.example.newsapp.util.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.newsapp.util.Resource
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 
 class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
@@ -38,6 +36,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
         setupRecyclerView()
         setRetryButtonClickListener()
+        setChipsListener()
         handleResponseData()
 
         articleItemOnClick()
@@ -61,9 +60,9 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     }
 
 
-    //Application State booleans for pagination
+    //booleans for pagination
     var isError = false
-    var isLoading = false       //TODO: data class
+    var isLoading = false
     var isLastPage = false
     var isScrolling = false
 
@@ -74,7 +73,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
      * *states*: ***Success, Error, Loading***
      */
     private fun handleResponseData() {
-        //TODO: Resource responses to separate funcs
         viewModel.breakingNews.observe(viewLifecycleOwner, { response ->
             when (response) {
                 is Resource.Success -> {
@@ -84,7 +82,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                     response.data?.let { newsResponse ->
                         newsAdapter.differ.submitList(newsResponse.articles.toList())
                         val totalPages =
-                            newsResponse.totalResults / QUERY_PAGE_SIZE + 2 //2 = 1 empty page at the end + 1 for INT rounding when dividing TODO: Separate func
+                            newsResponse.totalResults / QUERY_PAGE_SIZE + 2 //2 = 1 empty page at the end + 1 for INT rounding when dividing
                         isLastPage = viewModel.breakingNewsPage == totalPages
                         if (isLastPage) {
                             binding.rvBreakingNews.setPadding(0, 0, 0, 0)
@@ -190,7 +188,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             super.onScrolled(recyclerView, dx, dy)
 
 
-            //TODO: data class + more readable funcs for ifChecks
             //Pagination* and View helper vars for better readability
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
@@ -299,12 +296,134 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         )
     }
 
+    private fun setChipsListener() {
+        binding.apply {
+            chipBusiness.setOnCheckedChangeListener { chip, isChecked ->
+                if (isChecked) {
+                    if (viewModel.category != chip.text.toString()) {
+                        viewModel.changeCategory(chip.text.toString())
+                        if (viewModel.categoryChanged) {
+                            viewModel.getBreakingNews()
+                        }
+                    }
+                } else {
+                    chipGeneral.isChecked = true
+                    viewModel.changeCategory("General")
+                    viewModel.getBreakingNews()
+                }
+            }
+
+            chipEntertainment.setOnCheckedChangeListener { chip, isChecked ->
+                if (isChecked) {
+                    if (viewModel.category != chip.text.toString()) {
+                        viewModel.changeCategory(chip.text.toString())
+                        if (viewModel.categoryChanged) {
+                            viewModel.getBreakingNews()
+                        }
+                    }
+                } else {
+                    chipGeneral.isChecked = true
+                    viewModel.changeCategory("General")
+                    viewModel.getBreakingNews()
+                }
+            }
+
+            chipGeneral.setOnCheckedChangeListener { chip, isChecked ->
+                if (isChecked) {
+                    if (viewModel.category != chip.text.toString()) {
+                        viewModel.changeCategory("General")
+                        if (viewModel.categoryChanged) {
+                            viewModel.getBreakingNews()
+                        }
+                    }
+                }
+            }
+
+            chipHealth.setOnCheckedChangeListener { chip, isChecked ->
+                if (isChecked) {
+                    if (viewModel.category != chip.text.toString()) {
+                        viewModel.changeCategory(chip.text.toString())
+                        if (viewModel.categoryChanged) {
+                            viewModel.getBreakingNews()
+                        }
+                    }
+                } else {
+                    chipGeneral.isChecked = true
+                    viewModel.changeCategory("General")
+                    viewModel.getBreakingNews()
+                }
+            }
+
+            chipScience.setOnCheckedChangeListener { chip, isChecked ->
+                if (isChecked) {
+                    if (viewModel.category != chip.text.toString()) {
+                        viewModel.changeCategory(chip.text.toString())
+                        if (viewModel.categoryChanged) {
+                            viewModel.getBreakingNews()
+                        }
+                    }
+                } else {
+                    chipGeneral.isChecked = true
+                    viewModel.changeCategory("General")
+                    viewModel.getBreakingNews()
+                }
+            }
+
+            chipSports.setOnCheckedChangeListener { chip, isChecked ->
+                if (isChecked) {
+                    if (viewModel.category != chip.text.toString()) {
+                        viewModel.changeCategory(chip.text.toString())
+                        if (viewModel.categoryChanged) {
+                            viewModel.getBreakingNews()
+                        }
+                    }
+                } else {
+                    chipGeneral.isChecked = true
+                    viewModel.changeCategory("General")
+                    viewModel.getBreakingNews()
+                }
+            }
+
+            chipTechnology.setOnCheckedChangeListener { chip, isChecked ->
+                if (isChecked) {
+                    if (viewModel.category != chip.text.toString()) {
+                        viewModel.changeCategory(chip.text.toString())
+                        if (viewModel.categoryChanged) {
+                            viewModel.getBreakingNews()
+                        }
+                    }
+                } else {
+                    chipGeneral.isChecked = true
+                    viewModel.changeCategory("General")
+                    viewModel.getBreakingNews()
+                }
+            }
+        }
+    }
+
+    private fun toggleCheckedCategory() {
+        val category = viewModel.category
+        binding.apply {
+            when (category) {
+                "Business" -> chipBusiness.isChecked = true
+                "Entertainment" -> chipEntertainment.isChecked = true
+                "General" -> chipGeneral.isChecked = true
+                "Health" -> chipHealth.isChecked = true
+                "Science" -> chipScience.isChecked = true
+                "Sports" -> chipSports.isChecked = true
+                "Technology" -> chipTechnology.isChecked = true
+            }
+        }
+    }
+
+
     override fun onResume() {
         super.onResume()
 
-        //check if settings changed -> call refresh with new parameters
+        //check if settings or category changed -> call refresh with new parameters
         viewModel.loadSettings(context)
-        if(viewModel.countryCodeChanged){
+        toggleCheckedCategory()
+        if (viewModel.countryCodeChanged || viewModel.categoryChanged) {
             viewModel.getBreakingNews()
         }
     }

@@ -15,6 +15,13 @@
         <item name="android:textColor">@color/black_85_transparent</item>
     </style>
 
+    <!-- Chips -->
+    <style name="CustomChipStyle" parent="Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@color/chip_background_color</item>
+        <item name="android:textColor">@color/chip_text_color</item>
+    </style>
+
+    <!-- Splash screen -->
     <style name="splashScreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_image</item>
         <item name="android:statusBarColor">@color/black</item>

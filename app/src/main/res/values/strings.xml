@@ -46,4 +46,12 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
+    <!-- Category Chips -->
+    <string name="business_chip">Business</string>
+    <string name="entertainment_chip">Entertainment</string>
+    <string name="general_chip">General</string>
+    <string name="health_chip">Health</string>
+    <string name="science_chip">Science</string>
+    <string name="sports_chip">Sports</string>
+    <string name="technology_chip">Technology</string>
 </resources>

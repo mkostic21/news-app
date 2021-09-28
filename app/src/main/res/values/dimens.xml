@@ -5,4 +5,6 @@
     <dimen name="item_article_preview_margin">8dp</dimen>
     <dimen name="item_error_message_corner_radius">10dp</dimen>
     <dimen name="item_error_message_margin">16dp</dimen>
+    <dimen name="chip_group_vertical_margin">8dp</dimen>
+    <dimen name="chip_group_horizontal_padding">8dp</dimen>
 </resources>

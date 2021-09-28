@@ -8,9 +8,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvBreakingNews"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:clipToPadding="false"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/chip_group_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,11 +46,97 @@
         style="?attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/item_article_preview_margin"
         android:background="@android:color/transparent"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/chip_group_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <HorizontalScrollView
+        android:id="@+id/chip_group_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/chip_group_vertical_margin"
+        android:paddingHorizontal="@dimen/chip_group_horizontal_padding"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleLine="true"
+            app:singleSelection="true"
+            app:selectionRequired="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_business"
+                style="@style/CustomChipStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/business_chip"
+                android:tooltipText="@string/business_chip"
+                app:checkedIconEnabled="false" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_entertainment"
+                style="@style/CustomChipStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/entertainment_chip"
+                android:tooltipText="@string/entertainment_chip"
+                app:checkedIconEnabled="false" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_general"
+                style="@style/CustomChipStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/general_chip"
+                android:tooltipText="@string/general_chip"
+                app:checkedIconEnabled="false" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_health"
+                style="@style/CustomChipStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/health_chip"
+                android:tooltipText="@string/health_chip"
+                app:checkedIconEnabled="false" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_science"
+                style="@style/CustomChipStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/science_chip"
+                android:tooltipText="@string/science_chip"
+                app:checkedIconEnabled="false" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_sports"
+                style="@style/CustomChipStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sports_chip"
+                android:tooltipText="@string/sports_chip"
+                app:checkedIconEnabled="false" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_technology"
+                style="@style/CustomChipStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/technology_chip"
+                android:tooltipText="@string/technology_chip"
+                app:checkedIconEnabled="false" />
+
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

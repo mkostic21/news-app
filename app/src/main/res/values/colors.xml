@@ -9,5 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="black_50_transparent">#80000000</color>
     <color name="black_85_transparent">#D9000000</color>
+    <color name="mediumGray">#DEDEDE</color>
+    <color name="darkGray">#595959</color>
 
 </resources>

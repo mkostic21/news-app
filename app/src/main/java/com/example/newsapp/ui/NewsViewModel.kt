@@ -27,6 +27,8 @@ class NewsViewModel(
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
     var breakingNewsPage = 1
     private var breakingNewsResponse: NewsResponse? = null
+    var category = "General"
+    var categoryChanged = false
 
     //search news
     val searchNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
@@ -136,15 +138,16 @@ class NewsViewModel(
         breakingNews.postValue(Resource.Loading()) //post loading state before making a network call
 
         //if country code changed -> reset data
-        if(countryCodeChanged){
+        if(countryCodeChanged || categoryChanged){
             breakingNewsPage = 1
             breakingNewsResponse = null
             countryCodeChanged = false
+            categoryChanged = false
         }
 
         try {
             if (hasInternetConnection()) {
-                val response = newsRepository.getBreakingNews(countryCode, breakingNewsPage)
+                val response = newsRepository.getBreakingNews(countryCode, category, breakingNewsPage)
                 breakingNews.postValue(handleBreakingNewsResponse(response))
             } else {
                 breakingNews.postValue(Resource.Error("No Internet connection..."))
@@ -224,6 +227,13 @@ class NewsViewModel(
         if(newCountryCode != countryCode){
             countryCode = newCountryCode
             countryCodeChanged = true
+        }
+    }
+
+    fun changeCategory(newCategory: String) {
+        if(newCategory != category){
+            category = newCategory
+            categoryChanged = true
         }
     }
 }
