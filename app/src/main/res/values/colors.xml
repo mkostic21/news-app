@@ -11,5 +11,7 @@
     <color name="black_85_transparent">#D9000000</color>
     <color name="mediumGray">#DEDEDE</color>
     <color name="darkGray">#595959</color>
+    <color name="blue">#4285F4</color>
+    <color name="darkerBlue">#176BEF</color>
 
 </resources>
