@@ -1,11 +1,14 @@
 package com.example.newsapp.adapters
 
 import android.content.Context
+import android.content.res.Resources
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -122,6 +125,7 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
         return CircularProgressDrawable(context).apply {
             strokeWidth = 5f
             centerRadius = 30f
+            setColorSchemeColors(ContextCompat.getColor(context, R.color.darkerBlue))
             start()
         }
     }
