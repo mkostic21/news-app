@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ItemArticlePreviewBinding
 import com.example.newsapp.models.Article
@@ -110,7 +112,11 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
         val imgCircularProgressBar = setCircularProgressDrawable(holder.binding.root.context)
 
         holder.binding.apply {
-            Glide.with(root).load(article.urlToImage).placeholder(imgCircularProgressBar)
+            Glide.with(root)
+                .load(article.urlToImage)
+                .placeholder(imgCircularProgressBar)
+                .error(R.drawable.ic_image_error)
+                .transform(RoundedCorners(40))
                 .into(ivArticleImage)
             tvSource.text = article.source?.name
             tvTitle.text = article.title
@@ -138,7 +144,8 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
         val date = LocalDate.parse(input, dateFormat)
         return context.resources.getString(
             R.string.publishedAt,
-            date.dayOfWeek.toString().lowercase().replaceFirstChar { it.uppercase() }, //from -> to: FRIDAY -> Friday
+            date.dayOfWeek.toString().lowercase()
+                .replaceFirstChar { it.uppercase() }, //from -> to: FRIDAY -> Friday
             date.dayOfMonth,
             date.month.toString().lowercase().replaceFirstChar { it.uppercase() }
                 .removeRange(3, date.month.toString().length), //from -> to: SEPTEMBER -> Sep
