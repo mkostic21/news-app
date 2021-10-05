@@ -29,6 +29,7 @@ class NewsViewModel(
     private var breakingNewsResponse: NewsResponse? = null
     var category = "General"
     var categoryChanged = false
+    var isRefreshed = false
 
     //search news
     val searchNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
@@ -47,17 +48,18 @@ class NewsViewModel(
     }
 
 
-    //public methods for API calls
-    /**
-     * Calls [safeBreakingNewsCall]
-     */
+    //METHODS FOR API CALLS
+
+    fun refreshBreakingNews(){
+        isRefreshed = true
+        getBreakingNews()
+    }
+
     fun getBreakingNews() = viewModelScope.launch {
         safeBreakingNewsCall(countryCode)   //emit loading state before making network request
     }
 
-    /**
-     * Calls [safeSearchNewsCall]
-     */
+
     fun searchNews(searchQuery: String) = viewModelScope.launch {
         safeSearchNewsCall(searchQuery)    //emit loading state before making network request
     }
@@ -138,11 +140,12 @@ class NewsViewModel(
         breakingNews.postValue(Resource.Loading()) //post loading state before making a network call
 
         //if country code changed -> reset data
-        if(countryCodeChanged || categoryChanged){
+        if(countryCodeChanged || categoryChanged || isRefreshed){
             breakingNewsPage = 1
             breakingNewsResponse = null
             countryCodeChanged = false
             categoryChanged = false
+            isRefreshed = false
         }
 
         try {

@@ -37,10 +37,16 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         setupRecyclerView()
         setRetryButtonClickListener()
         setChipsListener()
+        setSwipeRefreshListener()
         handleResponseData()
-
         articleItemOnClick()
         moreOptionsMenuListener()
+    }
+
+    private fun setSwipeRefreshListener() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshBreakingNews()
+        }
     }
 
     //App bar -> settings button
@@ -58,7 +64,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 
     //booleans for pagination
     var isError = false
@@ -137,19 +142,22 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             layoutManager = LinearLayoutManager(activity)
             addOnScrollListener(this@BreakingNewsFragment.scrollListener)
 
-            showEmptyListMessage() //it's empty on init
+            //showEmptyListMessage() //it's empty on init
+            binding.swipeRefreshLayout.isRefreshing = true
         }
     }
 
 
     // Loading animation and Error screen toggle functions
     private fun hideProgressBar() {
-        binding.progressBar.visibility = View.INVISIBLE
+        //binding.progressBar.visibility = View.INVISIBLE
+        binding.swipeRefreshLayout.isRefreshing = false
         isLoading = false
     }
 
     private fun showProgressBar() {
-        binding.progressBar.visibility = View.VISIBLE
+        //binding.progressBar.visibility = View.VISIBLE
+        binding.swipeRefreshLayout.isRefreshing
         isLoading = true
     }
 
