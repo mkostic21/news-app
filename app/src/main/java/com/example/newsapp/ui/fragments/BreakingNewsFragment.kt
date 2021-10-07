@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.*
 import android.widget.AbsListView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -41,6 +43,22 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         handleResponseData()
         articleItemOnClick()
         moreOptionsMenuListener()
+        handleBackButtonBehaviour()
+    }
+
+    private fun handleBackButtonBehaviour() {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            val layoutManager = binding.rvBreakingNews.layoutManager as LinearLayoutManager
+            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+            val isNotAtBeginning = firstVisibleItemPosition >= 0
+
+            if (isNotAtBeginning) {
+                binding.rvBreakingNews.smoothScrollToPosition(0)
+                this.isEnabled = false
+            } else {
+                handleOnBackPressed()
+            }
+        }
     }
 
     private fun setSwipeRefreshListener() {
@@ -142,7 +160,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             layoutManager = LinearLayoutManager(activity)
             addOnScrollListener(this@BreakingNewsFragment.scrollListener)
 
-            //showEmptyListMessage() //it's empty on init
+            showEmptyListMessage() //it's empty on init
             binding.swipeRefreshLayout.isRefreshing = true
         }
     }
@@ -150,13 +168,11 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
     // Loading animation and Error screen toggle functions
     private fun hideProgressBar() {
-        //binding.progressBar.visibility = View.INVISIBLE
         binding.swipeRefreshLayout.isRefreshing = false
         isLoading = false
     }
 
     private fun showProgressBar() {
-        //binding.progressBar.visibility = View.VISIBLE
         binding.swipeRefreshLayout.isRefreshing
         isLoading = true
     }
@@ -304,7 +320,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         )
     }
 
-    //each chip replaces the curret category in viewModel and calls getNews to refresh list
+    //each chip replaces the current category in viewModel and calls getNews to refresh list
     private fun setChipsListener() {
         binding.apply {
             chipBusiness.setOnCheckedChangeListener { chip, isChecked ->
