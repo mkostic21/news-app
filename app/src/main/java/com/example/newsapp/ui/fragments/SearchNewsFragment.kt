@@ -53,7 +53,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
     }
 
-    //App bar -> settings button
+    //APP BAR -> settings button
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.app_bar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -68,9 +68,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-
-
+//------------------------------------------------------------------------------------
 
     // Status helper booleans for pagination
     var isError = false
@@ -81,13 +79,10 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     // textChangedListener helper vars
     var newSearchQuery: String? = null
     var oldSearchQuery: String? = null
+//------------------------------------------------------------------------------------
 
-
-    /**
-     * Calls ***ViewModel.SearchNews()*** with a [String] specified in **etSearch**
-     *
-     * After ***500ms*** if the **etSearch** search bar is **not empty**, it requests the network call with corresponding [String]
-     */
+    //SEARCH BAR:
+    //After 500ms if the search bar isn't empty -> request the network call with entered string
     private fun searchNews() {
         binding.etSearch.addTextChangedListener { editable ->
             job?.cancel()
@@ -97,7 +92,8 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                     if (editable.toString().isNotEmpty()) {
                         newSearchQuery = editable.toString()
 
-                        //ONLY if a new query is entered, request network call (on back from WebView don't request the same query)
+                        //ONLY if a new query is entered, request network call
+                        //(on back from WebView, don't request the same query)
                         if (newSearchQuery != oldSearchQuery) {
                             oldSearchQuery = newSearchQuery
                             viewModel.searchNews(editable.toString())
@@ -108,12 +104,15 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         }
     }
 
+    //get last search query from viewModel and display in search bar
+    private fun handleOldSearchQuery() {
+        viewModel.oldSearchQuery?.let {
+            binding.etSearch.setText(it)
+        }
+    }
+//------------------------------------------------------------------------------------
 
-    /**
-     * Handles *Pagination*, *Response* ***data*** and ***state***
-     *
-     * *states*: ***Success, Error, Loading***
-     */
+    //Handles pagination, response data and state
     private fun handleResponseData() {
         viewModel.searchNews.observe(viewLifecycleOwner, { response ->
             when (response) {
@@ -152,30 +151,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         })
     }
 
-
-    /**
-     * Sets ***OnClickListener*** to *Retry* button
-     *
-     * *OnClick* initiates a *network request* via *getBreakingNews()* from ***ViewModel***
-     */
-    private fun setRetryButtonClickListener() {
-        binding.itemErrorMessage.btnRetry.setOnClickListener {
-            if (binding.etSearch.text.toString().isNotEmpty()) {
-                viewModel.searchNews(binding.etSearch.text.toString())
-            } else {
-                hideErrorMessage()
-                hideEmptyListMessage()
-            }
-        }
-    }
-
-
-    /**
-     * Sets up a [RecyclerView] *adapter* and passes the
-     * custom ***OnClickListener*** in the constructor.
-     *
-     *  Also adds custom ***OnScrollListener*** defined *below*
-     */
+    //adds custom OnScrollListener (defined below)
     private fun setupRecyclerView() {
         newsAdapter = NewsAdapter()
         binding.rvSearchNews.apply {
@@ -187,14 +163,8 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         }
     }
 
-    private fun handleOldSearchQuery(){
-        viewModel.oldSearchQuery?.let {
-            binding.etSearch.setText(it)
-        }
-    }
 
-
-    //Loading animation and Error screen toggle functions
+    //MISC UI funcs:
     private fun hideProgressBar() {
         binding.progressBar.visibility = View.INVISIBLE
     }
@@ -225,19 +195,17 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     private fun isArticleListEmpty(): Boolean {
         return newsAdapter.differ.currentList.isEmpty()
     }
+//------------------------------------------------------------------------------------
 
-
-    /**
-     * With the help of ***layoutManager*** it is possible to calculate
-     * if the last item in a *response page* has been reached.
-     *
-     * ***isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount***
-     */
+    //SCROLL LISTENER:
+    //With the help of layoutManager it is possible to calculate
+    //if the last item in a response page has been reached.
+    // isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
     private val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
-            //Pagination* and *View* helper vars for better readability
+            //Pagination and View helper vars for better readability
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val visibleItemCount = layoutManager.childCount
@@ -254,29 +222,21 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
             if (shouldPaginate) {
                 viewModel.searchNews(binding.etSearch.text.toString())
                 isScrolling = false
-
-
             }
         }
 
-        /**
-         * Checks if the [View] is currently being scrolled
-         */
+        //Checks if the View is currently being scrolled
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
             if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                 isScrolling = true
             }
         }
-
     }
+//------------------------------------------------------------------------------------
 
-
-    /**
-     * Puts passed [article] into a [Bundle].
-     *
-     * Then navigates to [ArticleFragment]
-     */
+    //CLICK LISTENERS:
+    //passes selected article and navigates to ArticleFragment
     private fun articleItemOnClick() {
         newsAdapter.setOnItemClickListener { article ->
             val bundle = Bundle().apply {
@@ -286,9 +246,19 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         }
     }
 
-    /**
-     * defines each [MenuItem] functionality
-     */
+    private fun setRetryButtonClickListener() {
+        binding.itemErrorMessage.btnRetry.setOnClickListener {
+            if (binding.etSearch.text.toString().isNotEmpty()) {
+                viewModel.searchNews(binding.etSearch.text.toString())
+            } else {
+                hideErrorMessage()
+                hideEmptyListMessage()
+            }
+        }
+    }
+//------------------------------------------------------------------------------------
+
+
     private fun moreOptionsMenuListener() {
         newsAdapter.setOnMenuItemClickListener { menuItem, article ->
             when (menuItem.itemId) {
@@ -329,9 +299,9 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         }
     }
 
-    /**
-     * Passes [bundle] and navigates to [ArticleFragment] via *NavController*
-     */
+
+    //FRAGMENT NAVIGATION:
+    //bundle is passed via navController
     private fun navigateToArticleFragment(bundle: Bundle) {
         binding.root.findNavController().navigate(
             R.id.action_searchNewsFragment_to_articleFragment,
@@ -344,5 +314,6 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
             R.id.action_searchNewsFragment_to_settingsFragment
         )
     }
+//------------------------------------------------------------------------------------
 
 }

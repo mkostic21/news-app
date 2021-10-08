@@ -1,15 +1,12 @@
 package com.example.newsapp.ui.fragments
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
-import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.example.newsapp.R
@@ -28,7 +25,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //app bar
+        //APP BAR
         (activity as AppCompatActivity).supportActionBar?.title = "Article Preview"
 
         binding = FragmentArticleBinding.bind(view)
@@ -40,13 +37,11 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
         setupClickListener(view)
     }
 
-
-    /**
-     * Loads data from [Article] into [WebView]
-     */
+    //WEB and CONNECTION:
     private fun setupWebView() {
         binding.webView.apply {
             webViewClient = object : WebViewClient() {
+                //ProgressBar while loading page
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                     binding.progressBar.visibility = View.VISIBLE
                     super.onPageStarted(view, url, favicon)
@@ -74,13 +69,9 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
             hideErrorMessage()
         }
     }
+    //------------------------------------------------------------------------------------
 
-    private fun setRetryButtonClickListener() {
-        binding.itemErrorMessage.btnRetry.setOnClickListener {
-            setupWebView()
-        }
-    }
-
+    //ERROR UI:
     private fun showErrorMessage() {
         binding.itemErrorMessage.root.visibility = View.VISIBLE
         binding.itemErrorMessage.tvErrorMessage.text = "No Internet connection"
@@ -89,16 +80,19 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
     private fun hideErrorMessage() {
         binding.itemErrorMessage.root.visibility = View.INVISIBLE
     }
+    //------------------------------------------------------------------------------------
 
-    /**
-     * Sets ***OnClickListener*** to *Floating Action Button (FAB)*
-     *
-     * *OnClick* method saves current [Article] to *Database*
-     */
+    //CLICK LISTENERS:
     private fun setupClickListener(view: View) {
         binding.fabFavourite.setOnClickListener {
             viewModel.saveArticle(article)
             Snackbar.make(view, "Article saved successfully", Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setRetryButtonClickListener() {
+        binding.itemErrorMessage.btnRetry.setOnClickListener {
+            setupWebView()
         }
     }
 }

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.R
 import com.example.newsapp.adapters.NewsAdapter
 import com.example.newsapp.databinding.FragmentSavedNewsBinding
-import com.example.newsapp.models.Article
 import com.example.newsapp.ui.NewsActivity
 import com.example.newsapp.ui.NewsViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -28,7 +27,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-         //app bar menu
+        //app bar menu
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.title = "Saved News"
 
@@ -40,13 +39,12 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         articleItemOnClick()
         moreOptionsMenuListener()
 
+        //ARTICLE SWIPE BEHAVIOUR:
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
-            /**
-             * This functionality is ***not being used*** so it just ***returns true*** as default behaviour
-             */
+            //NOT IN USE -> returns true (default)
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -55,9 +53,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
                 return true
             }
 
-            /**
-             * On ***left*** or ***right*** *swipe*, deletes selected [Article] from *Database*
-             */
+            //left and right swipes delete swiped article
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val article = newsAdapter.differ.currentList[position]
@@ -76,20 +72,17 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
                 })
             }
         }
-
         ItemTouchHelper(itemTouchHelperCallback).apply {
             attachToRecyclerView(binding.rvSavedNews)
         }
-
-
+        //------------------------------------------------------------------------------------
     }
 
-    //App bar -> settings button
+    //APP BAR -> settings button
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.app_bar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.app_bar_settings -> {
@@ -99,11 +92,9 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
             else -> super.onOptionsItemSelected(item)
         }
     }
+    //------------------------------------------------------------------------------------
 
-    /**
-     * Sets up a [RecyclerView] *adapter* and passes the
-     * custom ***OnClickListener*** in the constructor.
-     */
+
     private fun setupRecyclerView() {
         newsAdapter = NewsAdapter()
         binding.rvSavedNews.apply {
@@ -112,19 +103,17 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         }
     }
 
-    //Empty list message toggle methods
+
+    //UI: empty database
     private fun showEmptyListMessage() {
         binding.itemEmptyList.root.visibility = View.VISIBLE
     }
-
     private fun hideEmptyListMessage() {
         binding.itemEmptyList.root.visibility = View.INVISIBLE
     }
+    //------------------------------------------------------------------------------------
 
 
-    /**
-     * Get saved ***Articles*** from ***Database*** and load them into [RecyclerView] *Adapter*
-     */
     private fun loadSavedArticlesFromDB() {
         viewModel.getSavedNews().observe(viewLifecycleOwner, { articles ->
             newsAdapter.differ.submitList(articles)
@@ -137,11 +126,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         })
     }
 
-    /**
-     * Puts passed [Article] into a [Bundle].
-     *
-     * Then navigates to [ArticleFragment]
-     */
+    //passes selected article and navigates to ArticleFragment
     private fun articleItemOnClick() {
         newsAdapter.setOnItemClickListener { article ->
             val bundle = Bundle().apply {
@@ -152,9 +137,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
     }
 
 
-    /**
-     * defines each [MenuItem] click functionality
-     */
+
     private fun moreOptionsMenuListener() {
         newsAdapter.setOnMenuItemClickListener { menuItem, article ->
             when (menuItem.itemId) {
@@ -183,21 +166,20 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         }
     }
 
-    /**
-     * Passes [bundle] and navigates to [ArticleFragment] via *NavController*
-     */
+    //FRAGMENT NAVIGATION:
+    //bundle is passed via navController
     private fun navigateToArticleFragment(bundle: Bundle) {
         binding.root.findNavController().navigate(
             R.id.action_savedNewsFragment_to_articleFragment,
             bundle
         )
     }
-
     private fun navigateToSettingsFragment() {
         binding.root.findNavController().navigate(
             R.id.action_savedNewsFragment_to_settingsFragment
         )
     }
+    //------------------------------------------------------------------------------------
 
 
 }

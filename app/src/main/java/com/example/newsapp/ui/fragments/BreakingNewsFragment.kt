@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.AbsListView
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -53,21 +52,16 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             val isNotAtBeginning = firstVisibleItemPosition >= 0
 
             if (isNotAtBeginning) {
+                //if not at top -> scroll to top
                 binding.rvBreakingNews.smoothScrollToPosition(0)
                 this.isEnabled = false
             } else {
-                handleOnBackPressed()
+                handleOnBackPressed() //default behaviour
             }
         }
     }
 
-    private fun setSwipeRefreshListener() {
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.refreshBreakingNews()
-        }
-    }
-
-    //App bar -> settings button
+    //APP BAR -> settings button
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.app_bar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -82,6 +76,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             else -> super.onOptionsItemSelected(item)
         }
     }
+//------------------------------------------------------------------------------------
 
     //booleans for pagination
     var isError = false
@@ -90,11 +85,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     var isScrolling = false
 
 
-    /**
-     * Handles *Pagination*, *Response* ***data*** and ***state***
-     *
-     * *states*: ***Success, Error, Loading***
-     */
+    //Handles pagination, response data and state
     private fun handleResponseData() {
         viewModel.breakingNews.observe(viewLifecycleOwner, { response ->
             when (response) {
@@ -132,27 +123,9 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             }
         })
     }
+//------------------------------------------------------------------------------------
 
-    /**
-     * Sets ***OnClickListener*** to *Retry* button
-     *
-     * *OnClick* initiates a *network request* via *getBreakingNews()* from ***ViewModel***
-     */
-    private fun setRetryButtonClickListener() {
-        binding.itemErrorMessage.btnRetry.setOnClickListener {
-            viewModel.getBreakingNews()
-            hideEmptyListMessage()
-            hideErrorMessage()
-        }
-    }
-
-
-    /**
-     * Sets up a [RecyclerView] *adapter* and passes the
-     * custom ***OnClickListener*** in the constructor.
-     *
-     *  Also adds custom ***OnScrollListener*** defined *below*
-     */
+    //adds custom OnScrollListener (defined below)
     private fun setupRecyclerView() {
         newsAdapter = NewsAdapter()
         binding.rvBreakingNews.apply {
@@ -161,12 +134,12 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             addOnScrollListener(this@BreakingNewsFragment.scrollListener)
 
             showEmptyListMessage() //it's empty on init
-            binding.swipeRefreshLayout.isRefreshing = true
+            binding.swipeRefreshLayout.isRefreshing = true //show progressBar on init
         }
     }
 
 
-    // Loading animation and Error screen toggle functions
+    //MISC UI funcs:
     private fun hideProgressBar() {
         binding.swipeRefreshLayout.isRefreshing = false
         isLoading = false
@@ -199,14 +172,12 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     private fun isArticleListEmpty(): Boolean {
         return newsAdapter.differ.currentList.isEmpty()
     }
+//------------------------------------------------------------------------------------
 
-
-    /**
-     * With the help of [LinearLayoutManager] it is possible to calculate
-     * if the last item in a *response page* has been reached.
-     *
-     * ***isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount***
-     */
+    //SCROLL LISTENER:
+    //With the help of layoutManager it is possible to calculate
+    //if the last item in a response page has been reached.
+    // isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
     private val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
@@ -234,9 +205,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             }
         }
 
-        /**
-         * Checks if the [View] is currently being scrolled
-         */
+        //Checks if the View is currently being scrolled
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
             if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
@@ -244,13 +213,10 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             }
         }
     }
+//------------------------------------------------------------------------------------
 
-
-    /**
-     * Puts passed [Article] into a [Bundle].
-     *
-     * Then navigates to [ArticleFragment]
-     */
+    //CLICK LISTENERS:
+    //passes selected article and navigates to ArticleFragment
     private fun articleItemOnClick() {
         newsAdapter.setOnItemClickListener { article ->
             val bundle = Bundle().apply {
@@ -260,9 +226,22 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         }
     }
 
-    /**
-     * defines each [MenuItem] functionality
-     */
+    private fun setRetryButtonClickListener() {
+        binding.itemErrorMessage.btnRetry.setOnClickListener {
+            viewModel.getBreakingNews()
+            hideEmptyListMessage()
+            hideErrorMessage()
+        }
+    }
+//------------------------------------------------------------------------------------
+
+    private fun setSwipeRefreshListener() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshBreakingNews()
+        }
+    }
+//------------------------------------------------------------------------------------
+
     private fun moreOptionsMenuListener() {
         newsAdapter.setOnMenuItemClickListener { menuItem, article ->
             when (menuItem.itemId) {
@@ -304,9 +283,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     }
 
 
-    /**
-     * Passes [bundle] and navigates to [ArticleFragment] via *NavController*
-     */
+    //FRAGMENT NAVIGATION:
+    //bundle is passed via navController
     private fun navigateToArticleFragment(bundle: Bundle) {
         binding.root.findNavController().navigate(
             R.id.action_breakingNewsFragment_to_articleFragment,
@@ -319,6 +297,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             R.id.action_breakingNewsFragment_to_settingsFragment
         )
     }
+//------------------------------------------------------------------------------------
 
     //each chip replaces the current category in viewModel and calls getNews to refresh list
     private fun setChipsListener() {
@@ -416,6 +395,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             }
         }
     }
+//------------------------------------------------------------------------------------
 
 
     override fun onResume() {
