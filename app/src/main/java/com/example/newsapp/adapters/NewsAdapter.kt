@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ItemArticlePreviewBinding
@@ -111,6 +112,7 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
             Glide.with(root)
                 .load(article.urlToImage)
                 .placeholder(imgCircularProgressBar)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .error(R.drawable.ic_image_error)
                 .transform(RoundedCorners(40))
                 .into(ivArticleImage)

@@ -8,9 +8,7 @@ import retrofit2.http.Query
 
 interface NewsAPI {
 
-    /**
-     * breaking news network request
-     */
+    //breaking news network request
     @GET("v2/top-headlines")
     suspend fun getBreakingNews(
         @Query("country")
@@ -23,9 +21,8 @@ interface NewsAPI {
         apiKey: String = API_KEY
     ): Response<NewsResponse>
 
-    /**
-     * Search news network request
-     */
+
+    //Search news network request
     @GET("v2/everything")
     suspend fun searchForNews(
         @Query("q")

@@ -16,6 +16,7 @@ import com.example.newsapp.models.NewsResponse
 import com.example.newsapp.repository.NewsRepository
 import com.example.newsapp.util.Resource
 import kotlinx.coroutines.launch
+import okhttp3.Cache
 import retrofit2.Response
 import java.io.IOException
 
@@ -23,6 +24,10 @@ class NewsViewModel(
     app: Application,
     private val newsRepository: NewsRepository
 ) : AndroidViewModel(app) {
+    //caching
+    val cacheSize = (5 * 1024 * 1024).toLong() //5MB
+    val cache = Cache(app.applicationContext.cacheDir, cacheSize)
+
     //breaking news
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
     var breakingNewsPage = 1

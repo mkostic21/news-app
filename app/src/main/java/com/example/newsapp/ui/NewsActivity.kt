@@ -12,6 +12,7 @@ import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.newsapp.R
+import com.example.newsapp.api.RetrofitInstance
 import com.example.newsapp.databinding.ActivityNewsBinding
 import com.example.newsapp.db.ArticleDatabase
 import com.example.newsapp.repository.NewsRepository
@@ -27,6 +28,8 @@ class NewsActivity : AppCompatActivity(){
         setTheme(R.style.Theme_NewsApp)
         binding = ActivityNewsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        RetrofitInstance.setCacheDir(this.cacheDir) //cache directory passed to retrofit (context is needed)
 
         val newsRepository = NewsRepository(ArticleDatabase(this))
         val viewModelProviderFactory = NewsViewModelProviderFactory(application, newsRepository)
@@ -48,9 +51,6 @@ class NewsActivity : AppCompatActivity(){
         val fragments = setOf(R.id.breakingNewsFragment, R.id.savedNewsFragment, R.id.searchNewsFragment)
         appBarConfiguration = AppBarConfiguration(fragments)
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-
-
     }
 
     //app bar back button
