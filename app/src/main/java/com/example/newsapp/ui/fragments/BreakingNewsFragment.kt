@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.R
 import com.example.newsapp.adapters.NewsAdapter
 import com.example.newsapp.databinding.FragmentBreakingNewsBinding
-import com.example.newsapp.models.Article
 import com.example.newsapp.ui.NewsActivity
 import com.example.newsapp.ui.NewsViewModel
 import com.example.newsapp.util.Constants.Companion.QUERY_PAGE_SIZE
@@ -48,15 +47,12 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     private fun handleBackButtonBehaviour() {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             val layoutManager = binding.rvBreakingNews.layoutManager as LinearLayoutManager
-            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-            val isNotAtBeginning = firstVisibleItemPosition >= 0
+            val firstVisibleItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
+            val isNotAtBeginning = firstVisibleItemPosition > 0
 
             if (isNotAtBeginning) {
-                //if not at top -> scroll to top
                 binding.rvBreakingNews.smoothScrollToPosition(0)
                 this.isEnabled = false
-            } else {
-                handleOnBackPressed() //default behaviour
             }
         }
     }
@@ -408,5 +404,4 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             viewModel.getBreakingNews()
         }
     }
-
 }
