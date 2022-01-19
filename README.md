@@ -3,9 +3,14 @@
 
 # News-App
 
-- *This application was my first project since I switched from Java to Kotlin and is still **work in progress***
+*This application was my first project since I switched from Java to Kotlin*
 
 ***News-App*** is a lightweight news reading Android application developed in [Kotlin](https://kotlinlang.org/)
+
+- Regional news feed *(select your country/language of interest in the settings)*
+- Quick category filtering
+- Article saving *(local DB)*
+- Search news by keyword
 
 Application uses [NewsAPI](http://newsapi.org) as *news source*
 
