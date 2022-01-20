@@ -3,7 +3,9 @@
 
 # News-App
 
-*This application was my first project since I switched from Java to Kotlin*
+```
+This was my first project since I switched from Java to Kotlin
+```
 
 ***News-App*** is a lightweight news reading Android application developed in [Kotlin](https://kotlinlang.org/)
 
@@ -11,6 +13,7 @@
 - Quick category filtering
 - Article saving *(local DB)*
 - Search news by keyword
+- light and dark mode
 
 Application uses [NewsAPI](http://newsapi.org) as *news source*
 
@@ -26,3 +29,11 @@ This app uses [***MVVM (Model View View-Model)***](https://developer.android.com
   - [Room](https://developer.android.com/topic/libraries/architecture/room) - SQLite object mapping library.
   - [Jetpack Navigation](https://developer.android.com/guide/navigation) - Navigation refers to the interactions that allow users to navigate across, into, and back out from the different pieces of content within your app
 - [Material Components for Android](https://material.io/develop/android) - Modular and customizable Material Design UI components for Android.
+
+## Preview (dark mode)
+### Swiping - switches between tabs
+<p align="center">
+  <img src="https://github.com/mkostic21/news-app/blob/master/screenshots/Screenshot_20211016-145615.jpg" width=25% height=25%>&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://github.com/mkostic21/news-app/blob/master/screenshots/Screenshot_20211016-145945.jpg" width=25% height=25%>&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://github.com/mkostic21/news-app/blob/master/screenshots/Screenshot_20211016-150020.jpg" width=25% height=25%>
+</p>
